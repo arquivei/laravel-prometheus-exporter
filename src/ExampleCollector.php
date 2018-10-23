@@ -1,6 +1,6 @@
 <?php
 
-namespace Superbalist\LaravelPrometheusExporter;
+namespace Taxibeat\LaravelPrometheusExporter;
 
 use Prometheus\Gauge;
 

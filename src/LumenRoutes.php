@@ -3,7 +3,7 @@
 $route = Route::get(
     config('prometheus.metrics_route_path'),
     \Taxibeat\LaravelPrometheusExporter\MetricsController::class . '@getMetrics'
-)->name('metrics'); /** @var \Illuminate\Routing\Route $route */
+); /** @var \Laravel\Lumen\Routing */
 $middleware = config('prometheus.metrics_route_middleware');
 
 if ($middleware) {

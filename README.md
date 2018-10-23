@@ -1,36 +1,58 @@
 # laravel-prometheus-exporter
 
-A prometheus exporter for Laravel.
+A prometheus exporter for Lumen.
 
-[![Author](http://img.shields.io/badge/author-@superbalist-blue.svg?style=flat-square)](https://twitter.com/superbalist)
-[![Build Status](https://img.shields.io/travis/Superbalist/laravel-prometheus-exporter/master.svg?style=flat-square)](https://travis-ci.org/Superbalist/laravel-prometheus-exporter)
-[![StyleCI](https://styleci.io/repos/98516814/shield?branch=master)](https://styleci.io/repos/98516814)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Packagist Version](https://img.shields.io/packagist/v/superbalist/laravel-prometheus-exporter.svg?style=flat-square)](https://packagist.org/packages/superbalist/laravel-prometheus-exporter)
-[![Total Downloads](https://img.shields.io/packagist/dt/superbalist/laravel-prometheus-exporter.svg?style=flat-square)](https://packagist.org/packages/superbalist/laravel-prometheus-exporter)
 
 This package is a wrapper bridging [jimdo/prometheus_client_php](https://github.com/Jimdo/prometheus_client_php) into Laravel.
 
 ## Installation
 
+Add the repository to composer.json
+```composer.json
+"repositories": [
+  {
+    "type": "vcs",
+    "url": "https://github.com/erifili117/lumen-prometheus-exporter"
+  }
+],
+```
+
+Require the lumen branch
+
 ```bash
-composer require superbalist/laravel-prometheus-exporter
+composer require taxibeat/laravel-prometheus-exporter:dev-develop
 ```
 
-Register the service provider in app.php
+Enable facades and register the facade in app.php
 ```php
-'providers' => [
+
+$userAliases = [
     // ...
-    Superbalist\LaravelPrometheusExporter\PrometheusServiceProvider::class,
-]
+    Taxibeat\LaravelPrometheusExporter\PrometheusFacade::class => 'Prometheus',
+];
+
+$app->withFacades(true, $userAliases);
 ```
 
-Register the facade in app.php
+Register the service provider and AppServiceProvider in app.php
 ```php
-'aliases' => [
-    // ...
-    'Prometheus' => Superbalist\LaravelPrometheusExporter\PrometheusFacade::class,
-]
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(Taxibeat\LaravelPrometheusExporter\PrometheusServiceProvider::class);
+```
+
+Configure the response factory in AppServiceProvider.php
+
+```php
+public function register()
+{
+    $this->app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function ($app) {
+        return new \Illuminate\Routing\ResponseFactory(
+            $app['Illuminate\Contracts\View\Factory'],
+            $app['Illuminate\Routing\Redirector']
+        );
+    });
+}
 ```
 
 ## Configuration
@@ -50,12 +72,16 @@ REDIS_PORT=6379
 PROMETHEUS_REDIS_PREFIX=PROMETHEUS_
 ```
 
-To customize the configuration file, publish the package configuration using Artisan.
-```bash
-php artisan vendor:publish --provider="Superbalist\LaravelPrometheusExporter\PrometheusServiceProvider"
-```
+To customize the configuration file, copy the included [prometheus.php](config/prometheus.php)
+to `config/prometheus.php` and edit it.
 
-You can then edit the generated config at `app/config/prometheus.php`.
+To use the new configuration file, register the provider as follows:
+
+```php
+$app->loadComponent('prometheus', [
+    Taxibeat\LaravelPrometheusExporter\PrometheusServiceProvider::class
+]);
+```
 
 ### Storage Adapters
 
@@ -90,7 +116,7 @@ You can auto-load your collectors by adding them to the `collectors` array in th
 
 ```php
 // retrieve the exporter
-$exporter = app(\Superbalist\LaravelPrometheusExporter::class);
+$exporter = app(\Taxibeat\LaravelPrometheusExporter::class);
 // or
 $exporter = app('prometheus');
 // or

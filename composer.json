@@ -1,11 +1,10 @@
 {
-  "name": "superbalist/laravel-prometheus-exporter",
+  "name": "taxibeat/laravel-prometheus-exporter",
   "description": "A prometheus exporter for Laravel",
   "license": "MIT",
   "authors": [
     {
-      "name": "Superbalist.com a division of Takealot Online (Pty) Ltd",
-      "email": "info@superbalist.com"
+      "name": "Taxibeat"
     }
   ],
   "require": {
@@ -16,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Superbalist\\LaravelPrometheusExporter\\": "src/",
+      "Taxibeat\\LaravelPrometheusExporter\\": "src/",
       "Tests\\": "tests/"
     }
   },

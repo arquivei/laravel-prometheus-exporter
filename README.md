@@ -13,7 +13,7 @@ Add the repository to composer.json
 "repositories": [
   {
     "type": "vcs",
-    "url": "https://github.com/erifili117/lumen-prometheus-exporter"
+    "url": "https://github.com/taxibeat/laravel-prometheus-exporter"
   }
 ],
 ```
@@ -102,6 +102,29 @@ This can be turned on/off using the `PROMETHEUS_METRICS_ROUTE_ENABLED` var, and 
 
 If you would like to protect this end-point, you can write any custom middleware and enable it using
 `PROMETHEUS_METRICS_ROUTE_MIDDLEWARE`.
+
+### Middleware
+
+An example middleware that records the `response_time_seconds` can be found at 
+[PrometheusRouteMiddleware](src/PrometheusRouteMiddleware.php).
+To use it, duplicate it to `app/Http/Middleware` and register it at
+`bootstrap/app.php` as a global middleware 
+
+```php
+$app->middleware([
+    App\Http\Middleware\PrometheusRouteMiddleware::class
+]);
+```
+
+The labels exported in this middleware are
+
+```php
+[
+    'method',
+    'route',
+    'status_code',
+]
+```
 
 ### Collectors
 

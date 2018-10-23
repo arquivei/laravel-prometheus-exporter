@@ -41,16 +41,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Metrics Route Name
+    | Metrics Route Router
     |--------------------------------------------------------------------------
     |
-    | Route Parh name aliase.
-    |
-    | This is only applicable if metrics_route_enabled is set to true.
+    | Choose to use either a lumen or a laravel compatible router
     |
     */
 
-    'metrics_route_name' => env('PROMETHEUS_METRICS_ROUTE_NAME', 'metrics'),
+    'metrics_route_router' => env('PROMETHEUS_METRICS_ROUTE_PATH', 'Lumen'),
 
     /*
     |--------------------------------------------------------------------------

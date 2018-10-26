@@ -18,7 +18,7 @@ class PrometheusServiceProvider extends ServiceProvider
         ]);
 
         if (config('prometheus.metrics_route_enabled')) {
-            $this->loadRoutesFrom(__DIR__ . '/routes.php');
+            $this->loadRoutesFrom(__DIR__ . '/' . config('prometheus.metrics_route_router') . 'Routes.php');
         }
 
         $exporter = $this->app->make(PrometheusExporter::class); /* @var PrometheusExporter $exporter */
@@ -38,6 +38,7 @@ class PrometheusServiceProvider extends ServiceProvider
         $this->app->singleton(PrometheusExporter::class, function ($app) {
             $adapter = $app['prometheus.storage_adapter'];
             $prometheus = new CollectorRegistry($adapter);
+
             return new PrometheusExporter(config('prometheus.namespace'), $prometheus);
         });
         $this->app->alias(PrometheusExporter::class, 'prometheus');
@@ -51,6 +52,7 @@ class PrometheusServiceProvider extends ServiceProvider
             $driver = config('prometheus.storage_adapter');
             $configs = config('prometheus.storage_adapters');
             $config = array_get($configs, $driver, []);
+
             return $factory->make($driver, $config);
         });
         $this->app->alias(Adapter::class, 'prometheus.storage_adapter');

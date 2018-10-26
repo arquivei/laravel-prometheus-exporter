@@ -14,7 +14,7 @@ class StorageAdapterFactory
      * Factory a storage adapter.
      *
      * @param string $driver
-     * @param array $config
+     * @param array  $config
      *
      * @return Adapter
      */
@@ -44,6 +44,7 @@ class StorageAdapterFactory
         if (isset($config['prefix'])) {
             Redis::setPrefix($config['prefix']);
         }
+
         return new Redis($config);
     }
 }

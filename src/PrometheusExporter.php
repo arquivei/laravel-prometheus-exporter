@@ -23,9 +23,9 @@ class PrometheusExporter
     protected $collectors = [];
 
     /**
-     * @param string $namespace
+     * @param string            $namespace
      * @param CollectorRegistry $prometheus
-     * @param array $collectors
+     * @param array             $collectors
      */
     public function __construct($namespace, CollectorRegistry $prometheus, array $collectors = [])
     {
@@ -105,7 +105,7 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param array  $labels
      *
      * @return \Prometheus\Counter
      *
@@ -133,7 +133,7 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param array  $labels
      *
      * @return \Prometheus\Counter
      *
@@ -149,7 +149,7 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param array  $labels
      *
      * @return \Prometheus\Gauge
      *
@@ -177,7 +177,7 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param array  $labels
      *
      * @return \Prometheus\Gauge
      *
@@ -193,8 +193,8 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
-     * @param array $buckets
+     * @param array  $labels
+     * @param array  $buckets
      *
      * @return \Prometheus\Histogram
      *
@@ -222,8 +222,8 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
-     * @param array $buckets
+     * @param array  $labels
+     * @param array  $buckets
      *
      * @return \Prometheus\Histogram
      *

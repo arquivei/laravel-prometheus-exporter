@@ -19,7 +19,7 @@ class MetricsController extends Controller
     protected $prometheusExporter;
 
     /**
-     * @param ResponseFactory $responseFactory
+     * @param ResponseFactory    $responseFactory
      * @param PrometheusExporter $prometheusExporter
      */
     public function __construct(ResponseFactory $responseFactory, PrometheusExporter $prometheusExporter)

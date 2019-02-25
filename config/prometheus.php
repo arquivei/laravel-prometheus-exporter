@@ -114,4 +114,7 @@ return [
         // \Your\ExporterClass::class,
     ],
 
+    'default_metric_labels' => [
+        //Set your default env vars labels here
+    ]
 ];

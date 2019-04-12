@@ -1,6 +1,8 @@
 <?php
 
-namespace Taxibeat\LaravelPrometheusExporter;
+declare(strict_types = 1);
+
+namespace Taxibeat\Pyr;
 
 use InvalidArgumentException;
 use Prometheus\Storage\Adapter;
@@ -18,7 +20,7 @@ class StorageAdapterFactory
      *
      * @return Adapter
      */
-    public function make($driver, array $config = [])
+    public function make(string $driver, array $config = []) : Adapter
     {
         switch ($driver) {
             case 'memory':
@@ -39,7 +41,7 @@ class StorageAdapterFactory
      *
      * @return Redis
      */
-    protected function makeRedisAdapter(array $config)
+    protected function makeRedisAdapter(array $config) : Redis
     {
         if (isset($config['prefix'])) {
             Redis::setPrefix($config['prefix']);

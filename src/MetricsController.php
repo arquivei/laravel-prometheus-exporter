@@ -1,10 +1,13 @@
 <?php
 
-namespace Taxibeat\LaravelPrometheusExporter;
+declare(strict_types = 1);
 
-use Illuminate\Contracts\Routing\ResponseFactory;
+namespace Taxibeat\Pyr;
+
+use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\Controller;
 use Prometheus\RenderTextFormat;
+use Symfony\Component\HttpFoundation\Response;
 
 class MetricsController extends Controller
 {
@@ -29,30 +32,14 @@ class MetricsController extends Controller
     }
 
     /**
-     * @return ResponseFactory
-     */
-    public function getResponseFactory()
-    {
-        return $this->responseFactory;
-    }
-
-    /**
-     * @return PrometheusExporter
-     */
-    public function getPrometheusExporter()
-    {
-        return $this->prometheusExporter;
-    }
-
-    /**
      * GET /metrics
      *
      * The route path is configurable in the prometheus.metrics_route_path config var, or the
-     * PROMETHEUS_METRICS_ROUTE_PATH env var.
+     * PYR_METRICS_ROUTE_PATH env var.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function getMetrics()
+    public function getMetrics() : Response
     {
         $metrics = $this->prometheusExporter->export();
 

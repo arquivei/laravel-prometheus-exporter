@@ -1,10 +1,14 @@
-# laravel-prometheus-exporter
+# Pyr
 
-A prometheus exporter for Lumen.
+A prometheus exporter package for Lumen and Laravel.
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
-This package is a wrapper bridging [jimdo/prometheus_client_php](https://github.com/Jimdo/prometheus_client_php) into Laravel.
+## Introduction
+
+Prometheus is a time-series database with a UI and sophisticated querying language (PromQL) that can scrape metrics, counters, gauges and histograms over HTTP.
+
+This package is a wrapper bridging [thebeatapp/prometheus_client_php](https://github.com/thebeatapp/prometheus_client_php) (a fork of [jimdo/prometheus_client_php](https://github.com/jimdo/prometheus_client_php)) into Lumen and Laravel.
 
 ## Installation
 
@@ -13,110 +17,77 @@ Add the repository to composer.json
 "repositories": [
   {
     "type": "vcs",
-    "url": "https://github.com/taxibeat/laravel-prometheus-exporter"
+    "url": "https://github.com/thebeatapp/pyr"
   }
 ],
 ```
 
-Require the lumen branch
-
+Install the package via composer
 ```bash
-composer require taxibeat/laravel-prometheus-exporter:dev-develop
+composer require thebeatapp/pyr
 ```
 
-Enable facades and register the facade in app.php
+After that you may enable facades and register the facade in your application's `bootstrap/app.php`
 ```php
-
 $userAliases = [
     // ...
-    Taxibeat\LaravelPrometheusExporter\PrometheusFacade::class => 'Prometheus',
+    Taxibeat\Pyr\PrometheusFacade::class => 'Prometheus',
 ];
-
 $app->withFacades(true, $userAliases);
 ```
 
-Register the service provider and AppServiceProvider in app.php
+Then you should register the service provider in `bootstrap/app.php`
 ```php
-$app->register(App\Providers\AppServiceProvider::class);
-$app->register(Taxibeat\LaravelPrometheusExporter\PrometheusServiceProvider::class);
+$app->register(Taxibeat\Pyr\PrometheusServiceProvider::class);
 ```
 
-Configure the response factory in AppServiceProvider.php
-
-```php
-public function register()
-{
-    $this->app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function ($app) {
-        return new \Illuminate\Routing\ResponseFactory(
-            $app['Illuminate\Contracts\View\Factory'],
-            $app['Illuminate\Routing\Redirector']
-        );
-    });
-}
-```
+Please see below for instructions on how to enable metrics on Application routes, Guzzle calls and SQL queries.
 
 ## Configuration
 
 The package has a default configuration which uses the following environment variables.
 ```
-PROMETHEUS_NAMESPACE=app
+PYR_NAMESPACE=app
 
-PROMETHEUS_METRICS_ROUTE_ENABLED=true
-PROMETHEUS_METRICS_ROUTE_PATH=metrics
-PROMETHEUS_METRICS_ROUTE_MIDDLEWARE=null
+PYR_METRICS_ROUTE_ENABLED=true
+PYR_METRICS_ROUTE_PATH=metrics
+PYR_METRICS_ROUTE_MIDDLEWARE=null
+PYR_COLLECT_FULL_SQL_QUERY=true
+PYR_STORAGE_ADAPTER=memory
 
-PROMETHEUS_STORAGE_ADAPTER=memory
-
-REDIS_HOST=localhost
-REDIS_PORT=6379
-PROMETHEUS_REDIS_PREFIX=PROMETHEUS_
+PYR_REDIS_HOST=localhost
+PYR_REDIS_PORT=6379
+PYR_REDIS_TIMEOUT=0.1
+PYR_REDIS_READ_TIMEOUT=10
+PYR_REDIS_PERSISTENT_CONNECTIONS=0
+PYR_REDIS_PREFIX=PYR_
 ```
 
-To customize the configuration file, copy the included [prometheus.php](config/prometheus.php)
-to `config/prometheus.php` and edit it.
-
-To use the new configuration file, register the provider as follows:
-
+To customize the configuration values you can either override the environment variables above (usually this is done in your application's `.env` file), or you can copy the included [prometheus.php](config/prometheus.php)
+to `config/prometheus.php`, edit it and use it in your application as follows:
 ```php
 $app->loadComponent('prometheus', [
-    Taxibeat\LaravelPrometheusExporter\PrometheusServiceProvider::class
+    Taxibeat\Pyr\PrometheusServiceProvider::class
 ]);
 ```
 
-### Storage Adapters
+## Metrics
 
-The storage adapter is used to persist metrics across requests.  The `memory` adapter is enabled by default, meaning
-data will only be persisted across the current request.  We recommend using the `redis` or `apc` adapter in production
-environments.
+The package allows you to observe metrics on:
 
-The `PROMETHEUS_STORAGE_ADAPTER` env var is used to specify the storage adapter.
+* Application routes. Metrics on request method, request path and status code.
+* Guzzle calls. Metrics on request method, URI and status code.
+* SQL queries. Metrics on SQL query and query type.
 
-If `redis` is used, the `REDIS_HOST` and `REDIS_PORT` vars also need to be configured.
-
-### Exporting Metrics
-
-The package adds a `/metrics` end-point, enabled by default, which exposes all metrics gathered by collectors.
-
-This can be turned on/off using the `PROMETHEUS_METRICS_ROUTE_ENABLED` var, and can also be changed using the
-`PROMETHEUS_METRICS_ROUTE_PATH` var.
-
-If you would like to protect this end-point, you can write any custom middleware and enable it using
-`PROMETHEUS_METRICS_ROUTE_MIDDLEWARE`.
-
-### Middleware
-
-An example middleware that records the `response_time_seconds` can be found at 
-[PrometheusRouteMiddleware](src/PrometheusRouteMiddleware.php).
-To use it, duplicate it to `app/Http/Middleware` and register it at
-`bootstrap/app.php` as a global middleware 
-
+In order to observe metrics in application routes (the time between a request and response),
+you should register the following middleware in your application's `bootstrap/app.php`:
 ```php
 $app->middleware([
-    App\Http\Middleware\PrometheusRouteMiddleware::class
+    Taxibeat\Pyr\RouteMiddleware::class,
 ]);
 ```
 
-The labels exported in this middleware are
+The labels exported are
 
 ```php
 [
@@ -126,24 +97,74 @@ The labels exported in this middleware are
 ]
 ```
 
-### Collectors
+To observe Guzzle metrics, you should register the following provider in `bootstrap/app.php`:
+```php
+$app->register(Taxibeat\Pyr\GuzzleServiceProvider::class);
+```
+
+The labels exported are
+
+```php
+[
+    'method',
+    'external_endpoint',
+    'status_code'
+]
+```
+
+To observe SQL metrics, you should register the following provider in `bootstrap/app.php`:
+```php
+$app->register(Taxibeat\Pyr\DatabaseServiceProvider::class);
+```
+
+The labels exported are
+
+```php
+[
+    'query',
+    'query_type',
+]
+```
+
+Note: you can disable logging the full query by turning off the configuration of `PYR_COLLECT_FULL_SQL_QUERY`.
+
+### Storage Adapters
+
+The storage adapter is used to persist metrics across requests.  The `memory` adapter is enabled by default, meaning
+data will only be persisted across the current request.
+
+We recommend using the `redis` or `apc` adapter in production
+environments. Of course your installation has to provide a Redis or APC implementation.
+
+The `PYR_STORAGE_ADAPTER` environment variable is used to specify the storage adapter.
+
+If `redis` is used, the `PYR_REDIS_HOST` and `PYR_REDIS_PORT` vars also need to be configured. Optionally you can change the `PYR_REDIS_TIMEOUT`, `PYR_REDIS_READ_TIMEOUT` and `PYR_REDIS_PERSISTENT_CONNECTIONS` variables.
+
+## Exporting Metrics
+
+The package adds a `/metrics` endpoint, enabled by default, which exposes all metrics gathered by collectors.
+
+This can be turned on/off using the `PYR_METRICS_ROUTE_ENABLED` environment variable,
+and can also be changed using the `PYR_METRICS_ROUTE_PATH` environment variable.
+
+## Collectors
 
 A collector is a class, implementing the [CollectorInterface](src/CollectorInterface.php), which is responsible for
 collecting data for one or many metrics.
 
-Please see the [ExampleCollector](src/ExampleCollector.php) included in this repository.
+Please see the [Example](#Collector) included below.
 
-You can auto-load your collectors by adding them to the `collectors` array in the prometheus.php config.
+You can auto-load your collectors by adding them to the `collectors` array in the `prometheus.php` config.
 
-## Usage
+## Examples
+
+### Example usage
+
+This is an example usage for a Lumen application
 
 ```php
-// retrieve the exporter
-$exporter = app(\Taxibeat\LaravelPrometheusExporter::class);
-// or
-$exporter = app('prometheus');
-// or
-$exporter = Prometheus::getFacadeRoot();
+// retrieve the exporter (you can also use app('prometheus') or Prometheus::getFacadeRoot())
+$exporter = app(\Taxibeat\Pyr\PrometheusExporter::class);
 
 // register a new collector
 $collector = new \My\New\Collector();
@@ -219,4 +240,73 @@ $histogram->observe(5.0, ['GET']);
 
 // retrieve a histogram
 $counter = $exporter->getHistogram('response_time_seconds');
+```
+
+### Collector
+
+This is an example collector implementation:
+
+```php
+<?php
+
+declare(strict_types = 1);
+
+namespace Taxibeat\Pyr;
+
+use Prometheus\Gauge;
+
+class ExampleCollector implements CollectorInterface
+{
+    /**
+     * @var Gauge
+     */
+    protected $usersRegisteredGauge;
+
+    /**
+     * Return the name of the collector.
+     *
+     * @return string
+     */
+    public function getName() : string
+    {
+        return 'users';
+    }
+
+    /**
+     * Register all metrics associated with the collector.
+     *
+     * The metrics needs to be registered on the exporter object.
+     * eg:
+     * ```php
+     * $exporter->registerCounter('search_requests_total', 'The total number of search requests.');
+     * ```
+     *
+     * @param PrometheusExporter $exporter
+     */
+    public function registerMetrics(PrometheusExporter $exporter) : void
+    {
+        $this->usersRegisteredGauge = $exporter->registerGauge(
+            'users_registered_total',
+            'The total number of registered users.',
+            ['group']
+        );
+    }
+
+    /**
+     * Collect metrics data, if need be, before exporting.
+     *
+     * As an example, this may be used to perform time consuming database queries and set the value of a counter
+     * or gauge.
+     */
+    public function collect() : void
+    {
+        // retrieve the total number of staff users registered
+        // eg: $totalUsers = Users::where('group', 'staff')->count();
+        $this->usersRegisteredGauge->set(36, ['staff']);
+
+        // retrieve the total number of regular users registered
+        // eg: $totalUsers = Users::where('group', 'regular')->count();
+        $this->usersRegisteredGauge->set(192, ['regular']);
+    }
+}
 ```

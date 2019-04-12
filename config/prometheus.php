@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'namespace' => env('PROMETHEUS_NAMESPACE', 'app'),
+    'namespace' => env('PYR_NAMESPACE', 'app'),
 
     /*
     |--------------------------------------------------------------------------
@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'metrics_route_enabled' => env('PROMETHEUS_METRICS_ROUTE_ENABLED', true),
+    'metrics_route_enabled' => env('PYR_METRICS_ROUTE_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -37,34 +37,7 @@ return [
     |
     */
 
-    'metrics_route_path' => env('PROMETHEUS_METRICS_ROUTE_PATH', 'metrics'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Metrics Route Router
-    |--------------------------------------------------------------------------
-    |
-    | Choose to use either a lumen or a laravel compatible router
-    |
-    */
-
-    'metrics_route_router' => env('PROMETHEUS_METRICS_ROUTE_PATH', 'Lumen'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Metrics Route Middleware
-    |--------------------------------------------------------------------------
-    |
-    | The middleware to assign to the metrics route.
-    |
-    | This can be used to protect the /metrics end-point to authenticated users,
-    | a specific ip address, etc.
-    | You are responsible for writing the middleware and implementing any
-    | business logic needed by your application.
-    |
-    */
-
-    'metrics_route_middleware' => env('PROMETHEUS_METRICS_ROUTE_MIDDLEWARE'),
+    'metrics_route_path' => env('PYR_METRICS_ROUTE_PATH', 'metrics'),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +50,7 @@ return [
     |
     */
 
-    'storage_adapter' => env('PROMETHEUS_STORAGE_ADAPTER', 'memory'),
+    'storage_adapter' => env('PYR_STORAGE_ADAPTER', 'memory'),
 
     /*
     |--------------------------------------------------------------------------
@@ -91,15 +64,26 @@ return [
     'storage_adapters' => [
 
         'redis' => [
-            'host' => env('REDIS_HOST', 'localhost'),
-            'port' => env('REDIS_PORT', 6379),
-            'timeout' => 0.1,
-            'read_timeout' => 10,
-            'persistent_connections' => false,
-            'prefix' => env('PROMETHEUS_REDIS_PREFIX', 'PROMETHEUS_'),
+            'host' => env('PYR_REDIS_HOST', 'localhost'),
+            'port' => env('PYR_REDIS_PORT', 6379),
+            'timeout' => env('PYR_REDIS_TIMEOUT', 0.1),
+            'read_timeout' => env('PYR_REDIS_READ_TIMEOUT', 10),
+            'persistent_connections' => env('PYR_REDIS_PERSISTENT_CONNECTIONS', false),
+            'prefix' => env('PYR_REDIS_PREFIX', 'PYR_'),
         ],
 
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Collect full SQL query
+    |--------------------------------------------------------------------------
+    |
+    | Indicates whether we should collect the full SQL query or not.
+    |
+    */
+
+    'collect_full_sql_query' => env('PYR_COLLECT_FULL_SQL_QUERY', true),
 
     /*
     |--------------------------------------------------------------------------

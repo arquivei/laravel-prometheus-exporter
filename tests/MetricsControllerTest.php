@@ -1,48 +1,62 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Tests;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Prometheus\RenderTextFormat;
-use Taxibeat\LaravelPrometheusExporter\MetricsController;
-use Taxibeat\LaravelPrometheusExporter\PrometheusExporter;
+use Taxibeat\Pyr\MetricsController;
+use Taxibeat\Pyr\PrometheusExporter;
 
+/**
+ * @covers \Taxibeat\Pyr\MetricsController<extended>
+ */
 class MetricsControllerTest extends TestCase
 {
-    public function testConstruct()
+    /**
+     * @var ResponseFactory|Mockery\MockInterface
+     */
+    private $responseFactory;
+
+    /**
+     * @var PrometheusExporter|Mockery\MockInterface
+     */
+    private $exporter;
+
+    /**
+     * @var MetricsController
+     */
+    private $controller;
+
+    public function setUp() : void
     {
-        $responseFactory = Mockery::mock(ResponseFactory::class);
-        $exporter = Mockery::mock(PrometheusExporter::class);
-        $controller = new MetricsController($responseFactory, $exporter);
-        $this->assertSame($responseFactory, $controller->getResponseFactory());
-        $this->assertSame($exporter, $controller->getPrometheusExporter());
+        parent::setUp();
+
+        $this->responseFactory = Mockery::mock(ResponseFactory::class);
+        $this->exporter = Mockery::mock(PrometheusExporter::class);
+        $this->controller = new MetricsController($this->responseFactory, $this->exporter);
     }
 
-    public function testGetMetrics()
+    public function testGetMetrics() : void
     {
-        $response = Mockery::mock(Response::class);
-
-        $responseFactory = Mockery::mock(ResponseFactory::class);
-        $responseFactory->shouldReceive('make')
+        $mockResponse = Mockery::mock(Response::class);
+        $this->responseFactory->shouldReceive('make')
             ->once()
             ->withArgs([
                 "\n",
                 200,
                 ['Content-Type' => RenderTextFormat::MIME_TYPE],
             ])
-            ->andReturn($response);
-
-        $exporter = Mockery::mock(PrometheusExporter::class);
-        $exporter->shouldReceive('export')
+            ->andReturn($mockResponse);
+        $this->exporter->shouldReceive('export')
             ->once()
             ->andReturn([]);
 
-        $controller = new MetricsController($responseFactory, $exporter);
-
-        $r = $controller->getMetrics();
-        $this->assertSame($response, $r);
+        $actualResponse = $this->controller->getMetrics();
+        $this->assertSame($mockResponse, $actualResponse);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Tests;
 
 use Mockery;
@@ -8,12 +10,12 @@ use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
 use Prometheus\Gauge;
 use Prometheus\Histogram;
-use Taxibeat\LaravelPrometheusExporter\CollectorInterface;
-use Taxibeat\LaravelPrometheusExporter\PrometheusExporter;
+use Taxibeat\Pyr\CollectorInterface;
+use Taxibeat\Pyr\PrometheusExporter;
 
 class PrometheusExporterTest extends TestCase
 {
-    public function testConstruct()
+    public function testConstruct() : void
     {
         $registry = Mockery::mock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -21,7 +23,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($registry, $exporter->getPrometheus());
     }
 
-    public function testConstructWithCollectors()
+    public function testConstructWithCollectors() : void
     {
         $collector1 = Mockery::mock(CollectorInterface::class);
         $collector1->shouldReceive('getName')
@@ -49,7 +51,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($collector2, $collectors['search_requests']);
     }
 
-    public function testRegisterCollector()
+    public function testRegisterCollector() : void
     {
         $registry = Mockery::mock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -72,7 +74,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($collector, $collectors['users']);
     }
 
-    public function testRegisterCollectorWhenCollectorIsAlreadyRegistered()
+    public function testRegisterCollectorWhenCollectorIsAlreadyRegistered() : void
     {
         $registry = Mockery::mock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -81,7 +83,6 @@ class PrometheusExporterTest extends TestCase
 
         $collector = Mockery::mock(CollectorInterface::class);
         $collector->shouldReceive('getName')
-            ->once()
             ->andReturn('users');
         $collector->shouldReceive('registerMetrics')
             ->once()
@@ -102,7 +103,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($collector, $collectors['users']);
     }
 
-    public function testGetCollector()
+    public function testGetCollector() : void
     {
         $registry = Mockery::mock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -123,7 +124,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($collector, $c);
     }
 
-    public function testGetCollectorWhenCollectorIsNotRegistered()
+    public function testGetCollectorWhenCollectorIsNotRegistered() : void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The collector "test" is not registered.');
@@ -134,7 +135,7 @@ class PrometheusExporterTest extends TestCase
         $exporter->getCollector('test');
     }
 
-    public function testRegisterCounter()
+    public function testRegisterCounter() : void
     {
         $counter = Mockery::mock(Counter::class);
 
@@ -159,7 +160,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($counter, $c);
     }
 
-    public function testGetCounter()
+    public function testGetCounter() : void
     {
         $counter = Mockery::mock(Counter::class);
 
@@ -178,7 +179,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($counter, $c);
     }
 
-    public function testGetOrRegisterCounter()
+    public function testGetOrRegisterCounter() : void
     {
         $counter = Mockery::mock(Counter::class);
 
@@ -203,7 +204,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($counter, $c);
     }
 
-    public function testRegisterGauge()
+    public function testRegisterGauge() : void
     {
         $gauge = Mockery::mock(Gauge::class);
 
@@ -228,7 +229,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($gauge, $g);
     }
 
-    public function testGetGauge()
+    public function testGetGauge() : void
     {
         $gauge = Mockery::mock(Gauge::class);
 
@@ -247,7 +248,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($gauge, $g);
     }
 
-    public function testGetOrRegisterGauge()
+    public function testGetOrRegisterGauge() : void
     {
         $gauge = Mockery::mock(Gauge::class);
 
@@ -272,7 +273,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($gauge, $g);
     }
 
-    public function testRegisterHistogram()
+    public function testRegisterHistogram() : void
     {
         $histogram = Mockery::mock(Histogram::class);
 
@@ -299,7 +300,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($histogram, $h);
     }
 
-    public function testGetHistogram()
+    public function testGetHistogram() : void
     {
         $histogram = Mockery::mock(Histogram::class);
 
@@ -318,7 +319,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($histogram, $h);
     }
 
-    public function testGetOrRegisterHistogram()
+    public function testGetOrRegisterHistogram() : void
     {
         $histogram = Mockery::mock(Histogram::class);
 
@@ -345,7 +346,7 @@ class PrometheusExporterTest extends TestCase
         $this->assertSame($histogram, $h);
     }
 
-    public function testExport()
+    public function testExport() : void
     {
         $samples = ['meh'];
 

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;

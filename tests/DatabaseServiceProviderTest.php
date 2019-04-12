@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
@@ -10,7 +10,7 @@ use Prometheus\Histogram;
 use Prometheus\MetricFamilySamples;
 
 /**
- * @covers \Taxibeat\Pyr\DatabaseServiceProvider<extended>
+ * @covers \Beat\Pyr\DatabaseServiceProvider<extended>
  */
 class DatabaseServiceProviderTest extends TestCase
 {

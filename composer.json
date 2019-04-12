@@ -4,7 +4,7 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Taxibeat"
+      "name": "Beat"
     }
   ],
   "require": {
@@ -21,7 +21,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Taxibeat\\Pyr\\": "src/",
+      "Beat\\Pyr\\": "src/",
       "Tests\\": "tests/"
     }
   },

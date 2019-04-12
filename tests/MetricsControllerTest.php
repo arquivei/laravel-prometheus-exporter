@@ -9,11 +9,11 @@ use Illuminate\Http\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Prometheus\RenderTextFormat;
-use Taxibeat\Pyr\MetricsController;
-use Taxibeat\Pyr\PrometheusExporter;
+use Beat\Pyr\MetricsController;
+use Beat\Pyr\PrometheusExporter;
 
 /**
- * @covers \Taxibeat\Pyr\MetricsController<extended>
+ * @covers \Beat\Pyr\MetricsController<extended>
  */
 class MetricsControllerTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use Closure;
 use Symfony\Component\HttpFoundation\Request;

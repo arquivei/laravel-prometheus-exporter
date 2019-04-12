@@ -31,14 +31,14 @@ After that you may enable facades and register the facade in your application's 
 ```php
 $userAliases = [
     // ...
-    Taxibeat\Pyr\PrometheusFacade::class => 'Prometheus',
+    Beat\Pyr\PrometheusFacade::class => 'Prometheus',
 ];
 $app->withFacades(true, $userAliases);
 ```
 
 Then you should register the service provider in `bootstrap/app.php`
 ```php
-$app->register(Taxibeat\Pyr\PrometheusServiceProvider::class);
+$app->register(Beat\Pyr\PrometheusServiceProvider::class);
 ```
 
 Please see below for instructions on how to enable metrics on Application routes, Guzzle calls and SQL queries.
@@ -67,7 +67,7 @@ To customize the configuration values you can either override the environment va
 to `config/prometheus.php`, edit it and use it in your application as follows:
 ```php
 $app->loadComponent('prometheus', [
-    Taxibeat\Pyr\PrometheusServiceProvider::class
+    Beat\Pyr\PrometheusServiceProvider::class
 ]);
 ```
 
@@ -83,7 +83,7 @@ In order to observe metrics in application routes (the time between a request an
 you should register the following middleware in your application's `bootstrap/app.php`:
 ```php
 $app->middleware([
-    Taxibeat\Pyr\RouteMiddleware::class,
+    Beat\Pyr\RouteMiddleware::class,
 ]);
 ```
 
@@ -99,7 +99,7 @@ The labels exported are
 
 To observe Guzzle metrics, you should register the following provider in `bootstrap/app.php`:
 ```php
-$app->register(Taxibeat\Pyr\GuzzleServiceProvider::class);
+$app->register(Beat\Pyr\GuzzleServiceProvider::class);
 ```
 
 The labels exported are
@@ -114,7 +114,7 @@ The labels exported are
 
 To observe SQL metrics, you should register the following provider in `bootstrap/app.php`:
 ```php
-$app->register(Taxibeat\Pyr\DatabaseServiceProvider::class);
+$app->register(Beat\Pyr\DatabaseServiceProvider::class);
 ```
 
 The labels exported are
@@ -164,7 +164,7 @@ This is an example usage for a Lumen application
 
 ```php
 // retrieve the exporter (you can also use app('prometheus') or Prometheus::getFacadeRoot())
-$exporter = app(\Taxibeat\Pyr\PrometheusExporter::class);
+$exporter = app(\Beat\Pyr\PrometheusExporter::class);
 
 // register a new collector
 $collector = new \My\New\Collector();
@@ -251,7 +251,7 @@ This is an example collector implementation:
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use Prometheus\Gauge;
 

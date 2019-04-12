@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
@@ -13,7 +13,7 @@ use Orchestra\Testbench\TestCase;
 use Prometheus\Histogram;
 
 /**
- * @covers \Taxibeat\Pyr\GuzzleServiceProvider<extended>
+ * @covers \Beat\Pyr\GuzzleServiceProvider<extended>
  */
 class GuzzleServiceProviderTest extends TestCase
 {

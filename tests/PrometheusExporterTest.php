@@ -10,8 +10,8 @@ use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
 use Prometheus\Gauge;
 use Prometheus\Histogram;
-use Taxibeat\Pyr\CollectorInterface;
-use Taxibeat\Pyr\PrometheusExporter;
+use Beat\Pyr\CollectorInterface;
+use Beat\Pyr\PrometheusExporter;
 
 class PrometheusExporterTest extends TestCase
 {

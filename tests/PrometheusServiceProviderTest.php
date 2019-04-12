@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use Orchestra\Testbench\TestCase;
 use Prometheus\Storage\Adapter;
 
 /**
- * @covers \Taxibeat\Pyr\PrometheusServiceProvider<extended>
+ * @covers \Beat\Pyr\PrometheusServiceProvider<extended>
  */
 class PrometheusServiceProviderTest extends TestCase
 {

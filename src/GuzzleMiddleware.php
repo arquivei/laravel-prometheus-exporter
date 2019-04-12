@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Taxibeat\Pyr;
+namespace Beat\Pyr;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;

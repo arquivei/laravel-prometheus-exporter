@@ -9,10 +9,10 @@ use PHPUnit\Framework\TestCase;
 use Prometheus\Storage\APC;
 use Prometheus\Storage\InMemory;
 use Prometheus\Storage\Redis;
-use Taxibeat\Pyr\StorageAdapterFactory;
+use Beat\Pyr\StorageAdapterFactory;
 
 /**
- * @covers \Taxibeat\Pyr\StorageAdapterFactory<extended>
+ * @covers \Beat\Pyr\StorageAdapterFactory<extended>
  */
 class StorageAdapterFactoryTest extends TestCase
 {

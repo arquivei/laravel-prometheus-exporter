@@ -1,0 +1,29 @@
+global:
+  scrape_interval: "30s"
+  evaluation_interval: "5s"
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - "rules/*.yml"
+
+scrape_configs:
+  - job_name: "prometheus"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          instance: prometheus_server
+
+  - job_name: 'push-gateway'
+    honor_labels: true
+    static_configs:
+      - targets: ["push-gateway:9091"]
+        labels:
+          instance: push-gateway
+
+  - job_name: "app"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["nginx"]
+        labels:
+          instance: app

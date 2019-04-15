@@ -10,6 +10,17 @@ Prometheus is a time-series database with a UI and sophisticated querying langua
 
 This package is a wrapper bridging [thebeatapp/prometheus_client_php](https://github.com/thebeatapp/prometheus_client_php) (a fork of [jimdo/prometheus_client_php](https://github.com/jimdo/prometheus_client_php)) into Lumen and Laravel.
 
+## Example
+
+Head to [examples/lumen-app](https://github.com/thebeatapp/pyr/tree/example-application/examples/lumen-app) 
+to check out our awesome example application.
+To get it you'll have to clone the [Pyr](https://github.com/thebeatapp/pyr/) repo, as the example 
+is not included when downloaded from composer.
+
+The example is a full project containing it's own `README.md` so you can check the 
+library's functionality and the way it's intended to be used. 
+
+
 ## Installation
 
 Add the repository to composer.json

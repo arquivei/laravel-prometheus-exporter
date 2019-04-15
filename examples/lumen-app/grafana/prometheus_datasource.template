@@ -1,0 +1,1 @@
+{"id":1,"orgId":1,"name":"Prometheus","type":"prometheus","typeLogoUrl":"public/app/plugins/datasource/prometheus/img/prometheus_logo.svg","access":"direct","url":"http://localhost:${EXAMPLE_APP_PROMETHEUS_PORT}","password":"","user":"","database":"","basicAuth":false,"isDefault":false,"jsonData":{"keepCookies":[],"timeInterval":"30s"},"readOnly":false}

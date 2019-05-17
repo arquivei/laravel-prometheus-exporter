@@ -8,13 +8,13 @@ A prometheus exporter package for Lumen and Laravel.
 
 Prometheus is a time-series database with a UI and sophisticated querying language (PromQL) that can scrape metrics, counters, gauges and histograms over HTTP.
 
-This package is a wrapper bridging [thebeatapp/prometheus_client_php](https://github.com/thebeatapp/prometheus_client_php) (a fork of [jimdo/prometheus_client_php](https://github.com/jimdo/prometheus_client_php)) into Lumen and Laravel.
+This package is a wrapper bridging [beatlabs/prometheus_client_php](https://github.com/beatlabs/prometheus_client_php) (a fork of [jimdo/prometheus_client_php](https://github.com/jimdo/prometheus_client_php)) into Lumen and Laravel.
 
 ## Example
 
-Head to [examples/lumen-app](https://github.com/thebeatapp/pyr/tree/example-application/examples/lumen-app) 
+Head to [examples/lumen-app](https://github.com/beatlabs/pyr/tree/example-application/examples/lumen-app) 
 to check out our awesome example application.
-To get it you'll have to clone the [Pyr](https://github.com/thebeatapp/pyr/) repo, as the example 
+To get it you'll have to clone the [Pyr](https://github.com/beatlabs/pyr/) repo, as the example 
 is not included when downloaded from composer.
 
 The example is a full project containing it's own `README.md` so you can check the 
@@ -28,14 +28,14 @@ Add the repository to composer.json
 "repositories": [
   {
     "type": "vcs",
-    "url": "https://github.com/thebeatapp/pyr"
+    "url": "https://github.com/beatlabs/pyr"
   }
 ],
 ```
 
 Install the package via composer
 ```bash
-composer require thebeatapp/pyr
+composer require beatlabs/pyr
 ```
 
 After that you may enable facades and register the facade in your application's `bootstrap/app.php`

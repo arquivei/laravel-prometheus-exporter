@@ -1,5 +1,5 @@
 {
-  "name": "thebeatapp/pyr",
+  "name": "beatlabs/pyr",
   "description": "A Prometheus bridge for Lumen",
   "license": "MIT",
   "authors": [
@@ -11,12 +11,12 @@
     "php": ">=7.2.0",
     "illuminate/support": "^5.3",
     "illuminate/routing": "^5.3",
-    "thebeatapp/prometheus_client_php": "dev-master"
+    "beatlabs/prometheus_client_php": "dev-master"
   },
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/thebeatapp/prometheus_client_php"
+      "url": "https://github.com/beatlabs/prometheus_client_php"
     }
   ],
   "autoload": {

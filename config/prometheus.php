@@ -66,6 +66,7 @@ return [
         'redis' => [
             'host' => env('PYR_REDIS_HOST', 'localhost'),
             'port' => env('PYR_REDIS_PORT', 6379),
+            'database' => env('PYR_REDIS_DATABASE', 0),
             'timeout' => env('PYR_REDIS_TIMEOUT', 0.1),
             'read_timeout' => env('PYR_REDIS_READ_TIMEOUT', 10),
             'persistent_connections' => env('PYR_REDIS_PERSISTENT_CONNECTIONS', false),
@@ -97,8 +98,4 @@ return [
     'collectors' => [
         // \Your\ExporterClass::class,
     ],
-
-    'default_metric_labels' => [
-        //Set your default env vars labels here
-    ]
 ];

@@ -38,9 +38,7 @@ class PrometheusServiceProvider extends ServiceProvider
 
         $this->app->singleton(PrometheusExporter::class, function ($app) {
             $adapter = $app['prometheus.storage_adapter'];
-            $defaultMetricLabels = config('prometheus.default_metric_labels');
             $prometheus = new CollectorRegistry($adapter);
-            $prometheus->applyDefaultLabels($defaultMetricLabels);
 
             return new PrometheusExporter(config('prometheus.namespace'), $prometheus);
         });

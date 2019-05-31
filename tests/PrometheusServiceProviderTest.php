@@ -31,7 +31,6 @@ class PrometheusServiceProviderTest extends TestCase
         $this->assertTrue($config->get('prometheus.metrics_route_enabled'));
         $this->assertEmpty($config->get('prometheus.metrics_route_middleware'));
         $this->assertSame([], $config->get('prometheus.collectors'));
-        $this->assertSame([], $config->get('prometheus.default_metric_labels'));
         $this->assertEquals('memory', $config->get('prometheus.storage_adapter'));
     }
 

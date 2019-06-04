@@ -22,7 +22,7 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades(true, [
-    Beat\Pyr\PrometheusFacade::class => 'Prometheus'
+    Arquivei\LaravelPrometheusExporter\PrometheusFacade::class => 'Prometheus'
 ]);
 
 $app->withEloquent();
@@ -62,7 +62,7 @@ $app->singleton(
 // Register the Prometheus route middleware. You'll need to have the PrometheusServiceProvider
 // in order to monitor your routes
 $app->middleware([
-    Beat\Pyr\RouteMiddleware::class,
+    Arquivei\LaravelPrometheusExporter\PrometheusLumenRouteMiddleware::class,
 ]);
 
 // $app->middleware([
@@ -86,13 +86,13 @@ $app->middleware([
 
 // Register the main Prometheus service provider. To actually get metrics fr your routes
 // you'll need the RouteMiddleware
-$app->register(Beat\Pyr\PrometheusServiceProvider::class);
+$app->register(Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class);
 
 // Register this provider to get metrics for Database queries. You'll need the PrometheusServiceProvider
-$app->register(Beat\Pyr\DatabaseServiceProvider::class);
+$app->register(Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class);
 
 // Register this provider to get metrics from Guzzle clients. You'll need the PrometheusServiceProvider
-$app->register(Beat\Pyr\GuzzleServiceProvider::class);
+$app->register(Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class);
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);

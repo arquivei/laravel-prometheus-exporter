@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,11 +31,16 @@ class RouteMiddlewareTest extends TestCase
         $next = function (Request $request) use ($expectedResponse) {
             return $expectedResponse;
         };
-        $middleware = new RouteMiddleware();
+
+        $matchedRouteMock = \Mockery::mock(\Symfony\Component\Routing\Route::class);
+        $matchedRouteMock->shouldReceive('uri')->andReturn('/test/route');
+
+        $middleware = \Mockery::mock('Arquivei\LaravelPrometheusExporter\PrometheusLumenRouteMiddleware[getMatchedRoute]');
+        $middleware->shouldReceive('getMatchedRoute')->andReturn($matchedRouteMock);
         $actualResponse = $middleware->handle($request, $next);
 
         $this->assertSame($expectedResponse, $actualResponse);
         $this->assertGreaterThan(0, $value);
-        $this->assertSame(['GET', '/', 200], $labels);
+        $this->assertSame(['GET', '/test/route', 200], $labels);
     }
 }

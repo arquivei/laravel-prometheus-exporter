@@ -10,7 +10,7 @@
         "ext-pdo": "*",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/lumen-framework": "5.8.*",
-        "beatlabs/pyr": "dev-master",
+        "arquivei/laravel-prometheus-exporter": "dev-master",
         "vlucas/phpdotenv": "^3.3"
     },
     "require-dev": {
@@ -21,11 +21,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/beatlabs/pyr"
+            "url": "https://github.com/arquivei/laravel-prometheus-exporter"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/beatlabs/prometheus_client_php"
+            "url": "https://github.com/Jimdo/prometheus_client_php"
         }
     ],
     "autoload": {

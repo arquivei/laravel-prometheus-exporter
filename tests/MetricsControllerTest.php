@@ -9,11 +9,11 @@ use Illuminate\Http\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Prometheus\RenderTextFormat;
-use Beat\Pyr\MetricsController;
-use Beat\Pyr\PrometheusExporter;
+use Arquivei\LaravelPrometheusExporter\MetricsController;
+use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
 
 /**
- * @covers \Beat\Pyr\MetricsController<extended>
+ * @covers \Arquivei\LaravelPrometheusExporter\MetricsController<extended>
  */
 class MetricsControllerTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
@@ -13,7 +13,7 @@ use Orchestra\Testbench\TestCase;
 use Prometheus\Histogram;
 
 /**
- * @covers \Beat\Pyr\GuzzleServiceProvider<extended>
+ * @covers \Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider<extended>
  */
 class GuzzleServiceProviderTest extends TestCase
 {

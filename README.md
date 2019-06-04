@@ -1,6 +1,6 @@
-# Pyr
+# Laravel (and Lumen) Prometheus Exporter
 
-A prometheus exporter package for Lumen and Laravel.
+A prometheus exporter package for Laravel and Lumen.
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
@@ -8,17 +8,17 @@ A prometheus exporter package for Lumen and Laravel.
 
 Prometheus is a time-series database with a UI and sophisticated querying language (PromQL) that can scrape metrics, counters, gauges and histograms over HTTP.
 
-This package is a wrapper bridging [beatlabs/prometheus_client_php](https://github.com/beatlabs/prometheus_client_php) (a fork of [jimdo/prometheus_client_php](https://github.com/jimdo/prometheus_client_php)) into Lumen and Laravel.
+This package is a wrapper bridging [jimdo/prometheus_client_php](https://github.com/jimdo/prometheus_client_php) into Laravel and Lumen.
 
 ## Example
 
-Head to [examples/lumen-app](https://github.com/beatlabs/pyr/tree/example-application/examples/lumen-app) 
+Head to [examples/lumen-app](https://github.com/arquivei/laravel-prometheus-exporter/tree/example-application/examples/lumen-app)
 to check out our awesome example application.
-To get it you'll have to clone the [Pyr](https://github.com/beatlabs/pyr/) repo, as the example 
+To get it you'll have to clone the [Laravel Prometheus Exporter](https://github.com/arquivei/laravel-prometheus-exporter/) repo, as the example
 is not included when downloaded from composer.
 
-The example is a full project containing it's own `README.md` so you can check the 
-library's functionality and the way it's intended to be used. 
+The example is a full project containing it's own `README.md` so you can check the
+library's functionality and the way it's intended to be used.
 
 
 ## Installation
@@ -28,28 +28,28 @@ Add the repository to composer.json
 "repositories": [
   {
     "type": "vcs",
-    "url": "https://github.com/beatlabs/pyr"
+    "url": "https://github.com/arquivei/laravel-prometheus-exporter"
   }
 ],
 ```
 
 Install the package via composer
 ```bash
-composer require beatlabs/pyr
+composer require arquivei/laravel-prometheus-exporter
 ```
 
 After that you may enable facades and register the facade in your application's `bootstrap/app.php`
 ```php
 $userAliases = [
     // ...
-    Beat\Pyr\PrometheusFacade::class => 'Prometheus',
+    Arquivei\LaravelPrometheusExporter\PrometheusFacade::class => 'Prometheus',
 ];
 $app->withFacades(true, $userAliases);
 ```
 
 Then you should register the service provider in `bootstrap/app.php`
 ```php
-$app->register(Beat\Pyr\PrometheusServiceProvider::class);
+$app->register(Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class);
 ```
 
 Please see below for instructions on how to enable metrics on Application routes, Guzzle calls and SQL queries.
@@ -58,27 +58,27 @@ Please see below for instructions on how to enable metrics on Application routes
 
 The package has a default configuration which uses the following environment variables.
 ```
-PYR_NAMESPACE=app
+PROMETHEUS_NAMESPACE=app
 
-PYR_METRICS_ROUTE_ENABLED=true
-PYR_METRICS_ROUTE_PATH=metrics
-PYR_METRICS_ROUTE_MIDDLEWARE=null
-PYR_COLLECT_FULL_SQL_QUERY=true
-PYR_STORAGE_ADAPTER=memory
+PROMETHEUS_METRICS_ROUTE_ENABLED=true
+PROMETHEUS_METRICS_ROUTE_PATH=metrics
+PROMETHEUS_METRICS_ROUTE_MIDDLEWARE=null
+PROMETHEUS_COLLECT_FULL_SQL_QUERY=true
+PROMETHEUS_STORAGE_ADAPTER=memory
 
-PYR_REDIS_HOST=localhost
-PYR_REDIS_PORT=6379
-PYR_REDIS_TIMEOUT=0.1
-PYR_REDIS_READ_TIMEOUT=10
-PYR_REDIS_PERSISTENT_CONNECTIONS=0
-PYR_REDIS_PREFIX=PYR_
+PROMETHEUS_REDIS_HOST=localhost
+PROMETHEUS_REDIS_PORT=6379
+PROMETHEUS_REDIS_TIMEOUT=0.1
+PROMETHEUS_REDIS_READ_TIMEOUT=10
+PROMETHEUS_REDIS_PERSISTENT_CONNECTIONS=0
+PROMETHEUS_REDIS_PREFIX=PROMETHEUS_
 ```
 
 To customize the configuration values you can either override the environment variables above (usually this is done in your application's `.env` file), or you can copy the included [prometheus.php](config/prometheus.php)
 to `config/prometheus.php`, edit it and use it in your application as follows:
 ```php
 $app->loadComponent('prometheus', [
-    Beat\Pyr\PrometheusServiceProvider::class
+    Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class
 ]);
 ```
 
@@ -94,7 +94,7 @@ In order to observe metrics in application routes (the time between a request an
 you should register the following middleware in your application's `bootstrap/app.php`:
 ```php
 $app->middleware([
-    Beat\Pyr\RouteMiddleware::class,
+    Arquivei\LaravelPrometheusExporter\RouteMiddleware::class,
 ]);
 ```
 
@@ -110,7 +110,7 @@ The labels exported are
 
 To observe Guzzle metrics, you should register the following provider in `bootstrap/app.php`:
 ```php
-$app->register(Beat\Pyr\GuzzleServiceProvider::class);
+$app->register(Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class);
 ```
 
 The labels exported are
@@ -125,7 +125,7 @@ The labels exported are
 
 To observe SQL metrics, you should register the following provider in `bootstrap/app.php`:
 ```php
-$app->register(Beat\Pyr\DatabaseServiceProvider::class);
+$app->register(Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class);
 ```
 
 The labels exported are
@@ -137,7 +137,7 @@ The labels exported are
 ]
 ```
 
-Note: you can disable logging the full query by turning off the configuration of `PYR_COLLECT_FULL_SQL_QUERY`.
+Note: you can disable logging the full query by turning off the configuration of `PROMETHEUS_COLLECT_FULL_SQL_QUERY`.
 
 ### Storage Adapters
 
@@ -147,16 +147,16 @@ data will only be persisted across the current request.
 We recommend using the `redis` or `apc` adapter in production
 environments. Of course your installation has to provide a Redis or APC implementation.
 
-The `PYR_STORAGE_ADAPTER` environment variable is used to specify the storage adapter.
+The `PROMETHEUS_STORAGE_ADAPTER` environment variable is used to specify the storage adapter.
 
-If `redis` is used, the `PYR_REDIS_HOST` and `PYR_REDIS_PORT` vars also need to be configured. Optionally you can change the `PYR_REDIS_TIMEOUT`, `PYR_REDIS_READ_TIMEOUT` and `PYR_REDIS_PERSISTENT_CONNECTIONS` variables.
+If `redis` is used, the `PROMETHEUS_REDIS_HOST` and `PROMETHEUS_REDIS_PORT` vars also need to be configured. Optionally you can change the `PROMETHEUS_REDIS_TIMEOUT`, `PROMETHEUS_REDIS_READ_TIMEOUT` and `PROMETHEUS_REDIS_PERSISTENT_CONNECTIONS` variables.
 
 ## Exporting Metrics
 
 The package adds a `/metrics` endpoint, enabled by default, which exposes all metrics gathered by collectors.
 
-This can be turned on/off using the `PYR_METRICS_ROUTE_ENABLED` environment variable,
-and can also be changed using the `PYR_METRICS_ROUTE_PATH` environment variable.
+This can be turned on/off using the `PROMETHEUS_METRICS_ROUTE_ENABLED` environment variable,
+and can also be changed using the `PROMETHEUS_METRICS_ROUTE_PATH` environment variable.
 
 ## Collectors
 
@@ -175,7 +175,7 @@ This is an example usage for a Lumen application
 
 ```php
 // retrieve the exporter (you can also use app('prometheus') or Prometheus::getFacadeRoot())
-$exporter = app(\Beat\Pyr\PrometheusExporter::class);
+$exporter = app(\Arquivei\LaravelPrometheusExporter\PrometheusExporter::class);
 
 // register a new collector
 $collector = new \My\New\Collector();
@@ -262,7 +262,7 @@ This is an example collector implementation:
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Prometheus\Gauge;
 

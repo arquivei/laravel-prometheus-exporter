@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;

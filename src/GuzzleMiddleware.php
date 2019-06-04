@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;

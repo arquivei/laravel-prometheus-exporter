@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Middlewares;
+namespace Arquivei\LaravelPrometheusExporter;
 
-use Beat\Pyr\RouteMiddleware;
 use Closure;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Prometheus\Histogram;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PrometheusRouteMiddleware extends RouteMiddleware
+class PrometheusLaravelRouteMiddleware
 {
     /**
      * Handle an incoming request.
@@ -21,8 +20,7 @@ class PrometheusRouteMiddleware extends RouteMiddleware
      */
     public function handle(Request $request, Closure $next) : Response
     {
-        $routeCollection = RouteFacade::getRoutes();
-        $matchedRoute = $routeCollection->match($request);
+        $matchedRoute = $this->getMatchedRoute($request);
 
         $start = microtime(true);
         /** @var Response $response */
@@ -49,5 +47,11 @@ class PrometheusRouteMiddleware extends RouteMiddleware
             ]
         );
         return $response;
+    }
+
+    public function getMatchedRoute(Request $request)
+    {
+        $routeCollection = RouteFacade::getRoutes();
+        return $routeCollection->match($request);
     }
 }

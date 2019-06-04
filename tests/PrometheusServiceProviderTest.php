@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Orchestra\Testbench\TestCase;
 use Prometheus\Storage\Adapter;
 
 /**
- * @covers \Beat\Pyr\PrometheusServiceProvider<extended>
+ * @covers \Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider<extended>
  */
 class PrometheusServiceProviderTest extends TestCase
 {

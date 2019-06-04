@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
@@ -10,7 +10,7 @@ use Prometheus\Histogram;
 use Prometheus\MetricFamilySamples;
 
 /**
- * @covers \Beat\Pyr\DatabaseServiceProvider<extended>
+ * @covers \Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider<extended>
  */
 class DatabaseServiceProviderTest extends TestCase
 {
@@ -22,8 +22,8 @@ class DatabaseServiceProviderTest extends TestCase
         $histogram = $this->app->get('prometheus.sql.histogram');
         $this->assertInstanceOf(Histogram::class, $histogram);
         $this->assertSame(['query', 'query_type'], $histogram->getLabelNames());
-        $this->assertSame('app_mysql_query_duration', $histogram->getName());
-        $this->assertSame('MySQL query duration histogram', $histogram->getHelp());
+        $this->assertSame('app_sql_query_duration', $histogram->getName());
+        $this->assertSame('SQL query duration histogram', $histogram->getHelp());
 
         /* @var PrometheusExporter $prometheus */
         $prometheus = $this->app->get('prometheus');
@@ -34,8 +34,8 @@ class DatabaseServiceProviderTest extends TestCase
         $samples = $export[0];
         $this->assertInstanceOf(MetricFamilySamples::class, $samples);
         $this->assertSame(['query', 'query_type'], $samples->getLabelNames());
-        $this->assertSame('app_mysql_query_duration', $samples->getName());
-        $this->assertSame('MySQL query duration histogram', $samples->getHelp());
+        $this->assertSame('app_sql_query_duration', $samples->getName());
+        $this->assertSame('SQL query duration histogram', $samples->getHelp());
     }
 
     public function testServiceProviderWithoutCollectingFullSqlQueries()

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class DatabaseServiceProvider extends ServiceProvider
         DB::listen(function ($query) {
             $type = strtoupper(strtok($query->sql, ' '));
             $labels = array_values(array_filter([
-                config('prometheus.collect_full_sql_query') ? $query->sql : null,
+                config('prometheus.collect_full_sql_query') ? str_replace('"', '', $query->sql) : null,
                 $type
             ]));
             $this->app->get('prometheus.sql.histogram')->observe($query->time, $labels);
@@ -33,8 +33,8 @@ class DatabaseServiceProvider extends ServiceProvider
     {
         $this->app->singleton('prometheus.sql.histogram', function ($app) {
             return $app['prometheus']->getOrRegisterHistogram(
-                'mysql_query_duration',
-                'MySQL query duration histogram',
+                'sql_query_duration',
+                'SQL query duration histogram',
                 array_values(array_filter([
                     config('prometheus.collect_full_sql_query') ? 'query' : null,
                     'query_type'

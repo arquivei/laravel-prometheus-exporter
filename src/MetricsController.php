@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Beat\Pyr;
+namespace Arquivei\LaravelPrometheusExporter;
 
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\Controller;
@@ -35,7 +35,7 @@ class MetricsController extends Controller
      * GET /metrics
      *
      * The route path is configurable in the prometheus.metrics_route_path config var, or the
-     * PYR_METRICS_ROUTE_PATH env var.
+     * PROMETHEUS_METRICS_ROUTE_PATH env var.
      *
      * @return Response
      */

@@ -1,17 +1,17 @@
 {
-    "name": "beatlabs/pyr",
-    "description": "A Prometheus bridge for Lumen and Laravel",
+    "name": "arquivei/laravel-prometheus-exporter",
+    "description": "A Prometheus exporter for Laravel and Lumen",
     "license": "MIT",
     "authors": [
         {
-            "name": "Beat"
+            "name": "Arquivei"
         }
     ],
     "require": {
         "php": ">=7.2.0",
         "illuminate/support": "^5.3",
         "illuminate/routing": "^5.3",
-        "Jimdo/prometheus_client_php": "dev-master"
+        "jimdo/prometheus_client_php": "dev-master"
     },
     "repositories": [
         {
@@ -21,7 +21,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Beat\\Pyr\\": "src/",
+            "Arquivei\\LaravelPrometheusExporter\\": "src/",
             "Tests\\": "tests/"
         }
     },
@@ -34,6 +34,6 @@
         "phpunit/phpunit": "^7",
         "mockery/mockery": "^0.9.5",
         "friendsofphp/php-cs-fixer": "2.*",
-        "orchestra/testbench": "^3.5"
+        "orchestra/testbench": "^3.3"
     }
 }

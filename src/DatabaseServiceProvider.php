@@ -15,9 +15,10 @@ class DatabaseServiceProvider extends ServiceProvider
     public function boot() : void
     {
         DB::listen(function ($query) {
-            $type = strtoupper(strtok($query->sql, ' '));
+            $querySql = $this->cleanupSqlString((string)$query->sql);
+            $type = strtoupper(strtok($querySql, ' '));
             $labels = array_values(array_filter([
-                config('prometheus.collect_full_sql_query') ? str_replace('"', '', $query->sql) : null,
+                config('prometheus.collect_full_sql_query') ? $querySql : null,
                 $type
             ]));
             $this->app->get('prometheus.sql.histogram')->observe($query->time, $labels);
@@ -53,5 +54,20 @@ class DatabaseServiceProvider extends ServiceProvider
         return [
             'prometheus.sql.histogram',
         ];
+    }
+
+    /**
+     * Cleans the SQL string for registering the metric.
+     * Removes repetitive question marks and simplifies "VALUES" clauses.
+     *
+     * @return string
+     */
+    private function cleanupSqlString(string $sql): string
+    {
+        $sql = preg_replace('/(VALUES\s*)(\(.*?\),?)+/i', '$1()', $sql);
+        $sql = preg_replace('/(\s*\?\s*,?\s*){2,}/i', '?', $sql);
+        $sql = str_replace('"', '', $sql);
+
+        return $sql;
     }
 }

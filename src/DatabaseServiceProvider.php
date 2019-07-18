@@ -15,10 +15,13 @@ class DatabaseServiceProvider extends ServiceProvider
     public function boot() : void
     {
         DB::listen(function ($query) {
-            $querySql = $this->cleanupSqlString((string)$query->sql);
-            $type = strtoupper(strtok($querySql, ' '));
+            $querySql = '[omitted]';
+            $type = strtoupper(strtok((string)$query->sql, ' '));
+            if (config('prometheus.collect_full_sql_query')) {
+                $querySql = $this->cleanupSqlString((string)$query->sql);
+            }
             $labels = array_values(array_filter([
-                config('prometheus.collect_full_sql_query') ? $querySql : null,
+                $querySql,
                 $type
             ]));
             $this->app->get('prometheus.sql.histogram')->observe($query->time, $labels);
@@ -37,7 +40,7 @@ class DatabaseServiceProvider extends ServiceProvider
                 'sql_query_duration',
                 'SQL query duration histogram',
                 array_values(array_filter([
-                    config('prometheus.collect_full_sql_query') ? 'query' : null,
+                    'query',
                     'query_type'
                 ]))
             );
@@ -64,10 +67,10 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     private function cleanupSqlString(string $sql): string
     {
-        $sql = preg_replace('/(VALUES\s*)(\(.*?\),?)+/i', '$1()', $sql);
+        $sql = preg_replace('/(VALUES\s*)(\([^\)]*+\)[,\s]*+)++/i', '$1()', $sql);
         $sql = preg_replace('/(\s*\?\s*,?\s*){2,}/i', '?', $sql);
         $sql = str_replace('"', '', $sql);
 
-        return $sql;
+        return empty($sql) ? '[error]' : $sql;
     }
 }

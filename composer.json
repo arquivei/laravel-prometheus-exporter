@@ -8,15 +8,15 @@
         }
     ],
     "require": {
-        "php": ">=7.2.0",
-        "illuminate/support": "^5.3",
-        "illuminate/routing": "^5.3",
-        "jimdo/prometheus_client_php": "dev-master"
+        "php": ">=7.3.0",
+        "illuminate/support": "^5.3 || ^6.0",
+        "illuminate/routing": "^5.3 || ^6.0",
+        "endclothing/prometheus_client_php": "^1.0.2"
     },
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/Jimdo/prometheus_client_php.git"
+            "url": "https://github.com/endclothing/prometheus_client_php.git"
         }
     ],
     "autoload": {

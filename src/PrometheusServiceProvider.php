@@ -83,7 +83,7 @@ class PrometheusServiceProvider extends ServiceProvider
         $router = $this->app['router'];
 
         /** @var Route $route */
-        $isLumen = str_contains($this->app->version(), 'Lumen');
+        $isLumen = mb_strpos($this->app->version(), 'Lumen') !== false;
         if ($isLumen) {
             $router->get(
                 config('prometheus.metrics_route_path'),

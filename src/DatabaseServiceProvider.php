@@ -42,7 +42,8 @@ class DatabaseServiceProvider extends ServiceProvider
                 array_values(array_filter([
                     'query',
                     'query_type'
-                ]))
+                ])),
+                config('prometheus.sql_buckets') ?? null
             );
         });
     }

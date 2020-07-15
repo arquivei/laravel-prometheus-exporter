@@ -8,10 +8,10 @@
         }
     ],
     "require": {
-        "php": ">=7.3.0",
+        "php": "^7.2",
         "illuminate/support": "^5.3 || ^6.0",
         "illuminate/routing": "^5.3 || ^6.0",
-        "endclothing/prometheus_client_php": "^1.0.2"
+        "endclothing/prometheus_client_php": "v1.0.1"
     },
     "repositories": [
         {

@@ -22,7 +22,8 @@ class GuzzleServiceProvider extends ServiceProvider
             return $app['prometheus']->getOrRegisterHistogram(
                 'guzzle_response_duration',
                 'Guzzle response duration histogram',
-                ['method', 'external_endpoint', 'status_code']
+                ['method', 'external_endpoint', 'status_code'],
+                config('prometheus.guzzle_buckets') ?? null
             );
         });
         $this->app->singleton('prometheus.guzzle.handler', function ($app) {

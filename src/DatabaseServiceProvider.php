@@ -24,7 +24,11 @@ class DatabaseServiceProvider extends ServiceProvider
                 $querySql,
                 $type
             ]));
-            $this->app->get('prometheus.sql.histogram')->observe($query->time, $labels);
+            try {
+                $this->app->get('prometheus.sql.histogram')->observe($query->time, $labels);
+            } catch (\Throwable $e) {
+
+            }
         });
     }
 

@@ -28,24 +28,29 @@ class PrometheusLaravelRouteMiddleware
         $duration = microtime(true) - $start;
         /** @var PrometheusExporter $exporter */
         $exporter = app('prometheus');
-        $histogram = $exporter->getOrRegisterHistogram(
-            'response_time_seconds',
-            'It observes response time.',
-            [
-                'method',
-                'route',
-                'status_code',
-            ]
-        );
-        /** @var  Histogram $histogram */
-        $histogram->observe(
-            $duration,
-            [
-                $request->method(),
-                $matchedRoute->uri(),
-                $response->getStatusCode(),
-            ]
-        );
+        try {
+            $histogram = $exporter->getOrRegisterHistogram(
+                'response_time_seconds',
+                'It observes response time.',
+                [
+                    'method',
+                    'route',
+                    'status_code',
+                ]
+            );
+            /** @var  Histogram $histogram */
+            $histogram->observe(
+                $duration,
+                [
+                    $request->method(),
+                    $matchedRoute->uri(),
+                    $response->getStatusCode(),
+                ]
+            );
+        } catch (\Throwable $e) {
+            //fail silently in case of error reporting the metric
+        }
+
         return $response;
     }
 

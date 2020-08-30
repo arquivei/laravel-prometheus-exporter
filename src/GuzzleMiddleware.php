@@ -37,14 +37,19 @@ class GuzzleMiddleware
             $start = microtime(true);
             return $handler($request, $options)->then(
                 function (Response $response) use ($request, $start) {
-                    $this->histogram->observe(
-                        microtime(true) - $start,
-                        [
-                            $request->getMethod(),
-                            $request->getUri()->getHost(),
-                            $response->getStatusCode(),
-                        ]
-                    );
+                    try{
+                        $this->histogram->observe(
+                            microtime(true) - $start,
+                            [
+                                $request->getMethod(),
+                                $request->getUri()->getHost(),
+                                $response->getStatusCode(),
+                            ]
+                        );
+                    } catch (\Throwable $e) {
+                        //fail silently
+                    }
+
                     return $response;
                 }
             );

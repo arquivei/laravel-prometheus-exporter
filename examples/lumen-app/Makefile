@@ -50,7 +50,7 @@ down:
 SHELL := /bin/bash
 rebuild:
 	make down
-	docker rmi -f lumen-example-app_app
+	docker rmi -f lumen-app_app
 	set -a ;\
     source .env.docker ;\
 	docker-compose up -d ;\

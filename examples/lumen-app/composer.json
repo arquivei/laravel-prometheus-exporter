@@ -10,8 +10,8 @@
         "ext-pdo": "*",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/lumen-framework": "5.8.*",
-        "arquivei/laravel-prometheus-exporter": "dev-master",
-        "vlucas/phpdotenv": "^3.3"
+        "vlucas/phpdotenv": "^3.3",
+        "arquivei/laravel-prometheus-exporter": "^2.0.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
@@ -21,7 +21,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/arquivei/laravel-prometheus-exporter"
+            "url": "https://github.com/careem/laravel-prometheus-exporter"
         },
         {
             "type": "vcs",

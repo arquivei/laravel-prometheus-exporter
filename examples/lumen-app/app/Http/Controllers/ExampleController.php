@@ -7,6 +7,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
+use Illuminate\Filesystem\Cache;
 
 /**
  * Class ExampleController
@@ -31,6 +32,9 @@ class ExampleController extends Controller
         $client = app('prometheus.guzzle.client');
 
         $response = $client->get('https://jsonplaceholder.typicode.com/todos');
+
+
+        \Cache::put('key', 'value', 10000);
 
         // Parse
         $dec = json_decode($response->getBody(), true);
@@ -58,4 +62,7 @@ class ExampleController extends Controller
         // Count rows and dump the result
         dd(count($dec), count(Test::all()));
     }
+
+
+
 }

@@ -24,9 +24,14 @@ services:
   redis:
     hostname: redis
     image: 'redis:3.2'
-    command: 'redis-server --requirepass secret'
+    command: 'redis-server'
     ports:
       - '${EXAMPLE_APP_REDIS_PORT}:6379'
+  memcached:
+    hostname: memcached
+    image: memcached
+    ports:
+      - '${EXAMPLE_APP_MEMCACHED_PORT}:11211'
   my-sql:
     hostname: my-sql
     image: theasci/docker-mysql-tmpfs

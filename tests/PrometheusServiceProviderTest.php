@@ -20,9 +20,9 @@ class PrometheusServiceProviderTest extends TestCase
         $this->assertInstanceOf(PrometheusExporter::class, $this->app[PrometheusExporter::class]);
         $this->assertInstanceOf(StorageAdapterFactory::class, $this->app[StorageAdapterFactory::class]);
 
-        $this->assertInstanceOf(Adapter::class, $this->app->get('prometheus.storage_adapter'));
-        $this->assertInstanceOf(PrometheusExporter::class, $this->app->get('prometheus'));
-        $this->assertInstanceOf(StorageAdapterFactory::class, $this->app->get('prometheus.storage_adapter_factory'));
+        $this->assertInstanceOf(Adapter::class, $this->app->make('prometheus.storage_adapter'));
+        $this->assertInstanceOf(PrometheusExporter::class, $this->app->make('prometheus'));
+        $this->assertInstanceOf(StorageAdapterFactory::class, $this->app->make('prometheus.storage_adapter_factory'));
 
         /* @var \Illuminate\Support\Facades\Route $router */
         $router = $this->app['router'];

@@ -20,14 +20,14 @@ class DatabaseServiceProviderTest extends TestCase
         $this->createTestTable();
 
         /* @var \Prometheus\Histogram $histogram */
-        $histogram = $this->app->get('prometheus.sql.histogram');
+        $histogram = $this->app->make('prometheus.sql.histogram');
         $this->assertInstanceOf(Histogram::class, $histogram);
         $this->assertSame(['query', 'query_type'], $histogram->getLabelNames());
         $this->assertSame('app_sql_query_duration', $histogram->getName());
         $this->assertSame('SQL query duration histogram', $histogram->getHelp());
 
         /* @var PrometheusExporter $prometheus */
-        $prometheus = $this->app->get('prometheus');
+        $prometheus = $this->app->make('prometheus');
         $export = $prometheus->export();
         $this->assertCount(1, $export);
 
@@ -41,16 +41,16 @@ class DatabaseServiceProviderTest extends TestCase
 
     public function testServiceProviderWithoutCollectingFullSqlQueries()
     {
-        $this->app->get('config')->set('prometheus.collect_full_sql_query', false);
+        $this->app->make('config')->set('prometheus.collect_full_sql_query', false);
         $this->createTestTable();
 
         /* @var \Prometheus\Histogram $histogram */
-        $histogram = $this->app->get('prometheus.sql.histogram');
+        $histogram = $this->app->make('prometheus.sql.histogram');
         $this->assertInstanceOf(Histogram::class, $histogram);
         $this->assertSame(['query_type'], $histogram->getLabelNames());
 
         /* @var PrometheusExporter $prometheus */
-        $prometheus = $this->app->get('prometheus');
+        $prometheus = $this->app->make('prometheus');
         $export = $prometheus->export();
         $this->assertCount(1, $export);
 

@@ -21,17 +21,17 @@ class GuzzleServiceProviderTest extends TestCase
 {
     public function testServiceProvidersShouldHaveCorrectClasses() : void
     {
-        $this->assertInstanceOf(Client::class, $this->app->get('prometheus.guzzle.client'));
-        $this->assertInstanceOf(CurlHandler::class, $this->app->get('prometheus.guzzle.handler'));
-        $this->assertInstanceOf(GuzzleMiddleware::class, $this->app->get('prometheus.guzzle.middleware'));
-        $this->assertInstanceOf(HandlerStack::class, $this->app->get('prometheus.guzzle.handler-stack'));
-        $this->assertInstanceOf(Histogram::class, $this->app->get('prometheus.guzzle.client.histogram'));
+        $this->assertInstanceOf(Client::class, $this->app->make('prometheus.guzzle.client'));
+        $this->assertInstanceOf(CurlHandler::class, $this->app->make('prometheus.guzzle.handler'));
+        $this->assertInstanceOf(GuzzleMiddleware::class, $this->app->make('prometheus.guzzle.middleware'));
+        $this->assertInstanceOf(HandlerStack::class, $this->app->make('prometheus.guzzle.handler-stack'));
+        $this->assertInstanceOf(Histogram::class, $this->app->make('prometheus.guzzle.client.histogram'));
     }
 
     public function testHistogramShouldHaveCorrectData()
     {
         /* @var \Prometheus\Histogram $histogram */
-        $histogram = $this->app->get('prometheus.guzzle.client.histogram');
+        $histogram = $this->app->make('prometheus.guzzle.client.histogram');
         $this->assertInstanceOf(Histogram::class, $histogram);
         $this->assertSame(['method', 'external_endpoint', 'status_code'], $histogram->getLabelNames());
         $this->assertSame('app_guzzle_response_duration', $histogram->getName());
@@ -45,7 +45,7 @@ class GuzzleServiceProviderTest extends TestCase
             return new MockHandler([$response]);
         });
         /* @var Client $guzzleClient */
-        $guzzleClient = $this->app->get('prometheus.guzzle.client');
+        $guzzleClient = $this->app->make('prometheus.guzzle.client');
         $response = $guzzleClient->request('GET', '/');
         $this->assertNotEmpty($response);
     }

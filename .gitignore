@@ -5,4 +5,5 @@ bin
 coverage
 coverage.xml
 .php_cs.cache
+.phpunit.result.cache
 examples/lumen-app/vendor

@@ -2,11 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Tests;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use PHPUnit\Framework\TestCase;
 use Prometheus\Histogram;
 
 class RouteMiddlewareTest extends TestCase

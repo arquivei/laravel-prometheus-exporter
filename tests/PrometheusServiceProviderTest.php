@@ -2,9 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Tests;
 
-use Orchestra\Testbench\TestCase;
+use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
+use Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider;
+use Arquivei\LaravelPrometheusExporter\StorageAdapterFactory;
 use Prometheus\Storage\Adapter;
 
 /**

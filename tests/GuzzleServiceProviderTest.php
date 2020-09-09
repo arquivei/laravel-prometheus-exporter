@@ -2,14 +2,16 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Tests;
 
+use Arquivei\LaravelPrometheusExporter\GuzzleMiddleware;
+use Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider;
+use Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Orchestra\Testbench\TestCase;
 use Prometheus\Histogram;
 
 /**

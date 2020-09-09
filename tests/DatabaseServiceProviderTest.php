@@ -2,10 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Tests;
 
+use Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider;
+use Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use Orchestra\Testbench\TestCase;
 use Prometheus\Histogram;
 use Prometheus\MetricFamilySamples;
 

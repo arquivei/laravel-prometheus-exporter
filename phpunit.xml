@@ -12,7 +12,7 @@
 >
     <testsuites>
         <testsuite name="laravel-prometheus-exporter/tests">
-            <directory suffix=".php">./tests/</directory>
+            <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>
     <filter>

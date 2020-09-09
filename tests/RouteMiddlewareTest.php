@@ -6,7 +6,9 @@ namespace Tests;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Mockery;
 use Prometheus\Histogram;
+use Symfony\Component\Routing\Route;
 
 class RouteMiddlewareTest extends TestCase
 {
@@ -18,10 +20,10 @@ class RouteMiddlewareTest extends TestCase
             $value = $time;
             $labels = $data;
         };
-        $histogram = \Mockery::mock(Histogram::class);
+        $histogram = Mockery::mock(Histogram::class);
         $histogram->shouldReceive('observe')->andReturnUsing($observe);
 
-        $prometheus = \Mockery::mock(PrometheusExporter::class);
+        $prometheus = Mockery::mock(PrometheusExporter::class);
         $prometheus->shouldReceive('getOrRegisterHistogram')->andReturn($histogram);
         app()['prometheus'] = $prometheus;
 
@@ -31,10 +33,10 @@ class RouteMiddlewareTest extends TestCase
             return $expectedResponse;
         };
 
-        $matchedRouteMock = \Mockery::mock(\Symfony\Component\Routing\Route::class);
+        $matchedRouteMock = Mockery::mock(Route::class);
         $matchedRouteMock->shouldReceive('uri')->andReturn('/test/route');
 
-        $middleware = \Mockery::mock('Arquivei\LaravelPrometheusExporter\PrometheusLumenRouteMiddleware[getMatchedRoute]');
+        $middleware = Mockery::mock('Arquivei\LaravelPrometheusExporter\PrometheusLumenRouteMiddleware[getMatchedRoute]');
         $middleware->shouldReceive('getMatchedRoute')->andReturn($matchedRouteMock);
         $actualResponse = $middleware->handle($request, $next);
 

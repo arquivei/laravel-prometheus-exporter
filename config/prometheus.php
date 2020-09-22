@@ -71,6 +71,7 @@ return [
             'read_timeout' => env('PROMETHEUS_REDIS_READ_TIMEOUT', 10),
             'persistent_connections' => env('PROMETHEUS_REDIS_PERSISTENT_CONNECTIONS', false),
             'prefix' => env('PROMETHEUS_REDIS_PREFIX', 'PROMETHEUS_'),
+            'prefix_dynamic' => env('PROMETHEUS_REDIS_PREFIX_DYNAMIC', true),
         ],
 
     ],

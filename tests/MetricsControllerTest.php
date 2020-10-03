@@ -4,13 +4,12 @@ declare(strict_types = 1);
 
 namespace Tests;
 
-use Illuminate\Routing\ResponseFactory;
-use Illuminate\Http\Response;
-use Mockery;
-use PHPUnit\Framework\TestCase;
-use Prometheus\RenderTextFormat;
 use Arquivei\LaravelPrometheusExporter\MetricsController;
 use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
+use Illuminate\Http\Response;
+use Illuminate\Routing\ResponseFactory;
+use Mockery;
+use Prometheus\RenderTextFormat;
 
 /**
  * @covers \Arquivei\LaravelPrometheusExporter\MetricsController<extended>

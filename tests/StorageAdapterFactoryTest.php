@@ -4,12 +4,11 @@ declare(strict_types = 1);
 
 namespace Tests;
 
+use Arquivei\LaravelPrometheusExporter\StorageAdapterFactory;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 use Prometheus\Storage\APC;
 use Prometheus\Storage\InMemory;
 use Prometheus\Storage\Redis;
-use Arquivei\LaravelPrometheusExporter\StorageAdapterFactory;
 
 /**
  * @covers \Arquivei\LaravelPrometheusExporter\StorageAdapterFactory<extended>

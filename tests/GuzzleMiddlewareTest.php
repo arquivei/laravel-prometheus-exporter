@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Tests;
 
+use Arquivei\LaravelPrometheusExporter\GuzzleMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Prometheus\Histogram;
 
 class GuzzleMiddlewareTest extends TestCase

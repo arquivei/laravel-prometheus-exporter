@@ -4,14 +4,13 @@ declare(strict_types = 1);
 
 namespace Tests;
 
+use Arquivei\LaravelPrometheusExporter\CollectorInterface;
+use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
 use Prometheus\Gauge;
 use Prometheus\Histogram;
-use Arquivei\LaravelPrometheusExporter\CollectorInterface;
-use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
 
 class PrometheusExporterTest extends TestCase
 {

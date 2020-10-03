@@ -1,14 +1,62 @@
-dist: precise
-
 language: php
 
-php:
-  - 7.2
+matrix:
+  include:
+    - php: 7.2
+      env: PU_FILE=53
+    - php: 7.2
+      env: PU_FILE=54
+    - php: 7.2
+      env: PU_FILE=55
+    - php: 7.2
+      env: PU_FILE=56
+    - php: 7.2
+      env: PU_FILE=57
+    - php: 7.2
+      env: PU_FILE=58
+    - php: 7.2
+      env: PU_FILE=6
+    - php: 7.2
+      env: PU_FILE=7
+    - php: 7.3
+      env: PU_FILE=54
+    - php: 7.3
+      env: PU_FILE=55
+    - php: 7.3
+      env: PU_FILE=56
+    - php: 7.3
+      env: PU_FILE=57
+    - php: 7.3
+      env: PU_FILE=58
+    - php: 7.3
+      env: PU_FILE=6
+    - php: 7.3
+      env: PU_FILE=7
+    - php: 7.4
+      env: PU_FILE=54
+    - php: 7.4
+      env: PU_FILE=55
+    - php: 7.4
+      env: PU_FILE=56
+    - php: 7.4
+      env: PU_FILE=57
+    - php: 7.4
+      env: PU_FILE=58
+    - php: 7.4
+      env: PU_FILE=6
+    - php: 7.4
+      env: PU_FILE=7
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
 
 before_install:
   - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 before_script:
-  - composer install
+  - travis_retry composer self-update
+  - travis_retry composer install --no-interaction --prefer-dist
 
-script: ./vendor/bin/phpunit --configuration phpunit.xml
+script:
+  - ./tests/pu-${PU_FILE}.sh

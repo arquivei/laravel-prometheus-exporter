@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Arquivei\LaravelPrometheusExporter;
 
+use Arquivei\LaravelPrometheusExporter\Exporter\Exporters;
 use InvalidArgumentException;
 use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
@@ -24,6 +25,11 @@ class PrometheusExporter
     protected $prometheus;
 
     /**
+     * @var Exporters
+     */
+    protected $exporters;
+
+    /**
      * @var array
      */
     protected $collectors = [];
@@ -33,10 +39,15 @@ class PrometheusExporter
      * @param CollectorRegistry $prometheus
      * @param array             $collectors
      */
-    public function __construct(string $namespace, CollectorRegistry $prometheus, array $collectors = [])
-    {
+    public function __construct(
+        string $namespace,
+        CollectorRegistry $prometheus,
+        Exporters $exporters,
+        array $collectors = []
+    ) {
         $this->namespace = $namespace;
         $this->prometheus = $prometheus;
+        $this->exporters = $exporters;
 
         foreach ($collectors as $collector) {
             /* @var CollectorInterface $collector */
@@ -253,5 +264,29 @@ class PrometheusExporter
         }
 
         return $this->prometheus->getMetricFamilySamples();
+    }
+
+    /**
+     * Export the metrics from Push Gateway.
+     */
+    public function pushGateway(): void
+    {
+        $this->exporters
+            ->getPushGateway()
+            ->publish(
+                $this->prometheus
+            );
+    }
+
+    /**
+     * Export the metrics from Textfile.
+     */
+    public function pushTextfile(): void
+    {
+        $this->exporters
+            ->getTextfile()
+            ->publish(
+                $this->prometheus
+            );
     }
 }

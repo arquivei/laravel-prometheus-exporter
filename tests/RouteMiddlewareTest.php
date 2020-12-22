@@ -7,6 +7,7 @@ namespace Arquivei\LaravelPrometheusExporter;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
+use Prometheus\Counter;
 use Prometheus\Histogram;
 
 class RouteMiddlewareTest extends TestCase
@@ -22,7 +23,11 @@ class RouteMiddlewareTest extends TestCase
         $histogram = \Mockery::mock(Histogram::class);
         $histogram->shouldReceive('observe')->andReturnUsing($observe);
 
+        $counter = \Mockery::mock(Counter::class);
+        $counter->shouldReceive('inc')->andReturnUsing($counter);
+
         $prometheus = \Mockery::mock(PrometheusExporter::class);
+        $prometheus->shouldReceive('getOrRegisterCounter')->andReturn($counter);
         $prometheus->shouldReceive('getOrRegisterHistogram')->andReturn($histogram);
         app()['prometheus'] = $prometheus;
 

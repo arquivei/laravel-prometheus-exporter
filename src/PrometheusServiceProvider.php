@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Arquivei\LaravelPrometheusExporter;
 
+use Arquivei\LaravelPrometheusExporter\Exporter\Exporters;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -38,9 +39,10 @@ class PrometheusServiceProvider extends ServiceProvider
 
         $this->app->singleton(PrometheusExporter::class, function ($app) {
             $adapter = $app['prometheus.storage_adapter'];
+            $exporters = $app['prometheus.exporters'];
             $prometheus = new CollectorRegistry($adapter);
 
-            return new PrometheusExporter(config('prometheus.namespace'), $prometheus);
+            return new PrometheusExporter(config('prometheus.namespace'), $prometheus,  $exporters);
         });
         $this->app->alias(PrometheusExporter::class, 'prometheus');
 
@@ -58,6 +60,11 @@ class PrometheusServiceProvider extends ServiceProvider
             return $factory->make($driver, $config);
         });
         $this->app->alias(Adapter::class, 'prometheus.storage_adapter');
+
+        $this->app->bind('prometheus.exporters', function () {
+            $configs = config('prometheus.exporters');
+            return new Exporters($configs);
+        });
     }
 
     /**

@@ -76,6 +76,21 @@ return [
 
     ],
 
+    'exporters' => [
+
+        'job' => env('PROMETHEUS_EXPORTER_JOB', 'job'),
+
+        'push_gateway' => [
+            'address' => env('PROMETHEUS_EXPORTER_PUSH_GATEWAY_HOST', 'localhost'),
+            'job' => env('PROMETHEUS_EXPORTER_PUSH_GATEWAY_JOB', 'job'),
+        ],
+
+        'textfile' => [
+            'path' => env('PROMETHEUS_EXPORTER_TEXTFILE_PATH', '/'),
+        ],
+
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Collect full SQL query

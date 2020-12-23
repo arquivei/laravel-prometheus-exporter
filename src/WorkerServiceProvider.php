@@ -6,6 +6,7 @@ namespace Arquivei\LaravelPrometheusExporter;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -48,8 +49,12 @@ class WorkerServiceProvider extends ServiceProvider
         $this->app['events']->listen([
             JobProcessed::class,
             JobFailed::class,
+            JobExceptionOccurred::class
         ], function ($event) {
-            $success = ($event instanceof JobProcessed);
+            $status = $success = ($event instanceof JobProcessed);
+            if(!$status) {
+                $status = ($event instanceof JobFailed) ? 0 : -1;
+            }
             try{
                 $histogram = app('prometheus.workers.client.histogram');
                 $histogram->observe(
@@ -59,7 +64,7 @@ class WorkerServiceProvider extends ServiceProvider
                         $event->job->getQueue(),
                         $event->connectionName,
                         $success ? 0 : $event->exception->getCode(),
-                        (int) $success
+                        (int) $status //1 : success, 0: fail, -1: exception
                     ]
                 );
             } catch (\Throwable $e) {

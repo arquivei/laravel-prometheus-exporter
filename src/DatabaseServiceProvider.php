@@ -25,7 +25,8 @@ class DatabaseServiceProvider extends ServiceProvider
                 $type
             ]));
             try {
-                $this->app->get('prometheus.sql.histogram')->observe($query->time, $labels);
+                //the time should be in seconds
+                $this->app->get('prometheus.sql.histogram')->observe($query->time / 1000, $labels);
             } catch (\Throwable $e) {
 
             }

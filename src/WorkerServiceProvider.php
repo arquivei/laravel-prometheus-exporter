@@ -15,6 +15,9 @@ class WorkerServiceProvider extends ServiceProvider
 {
 
     public static $starts;
+    public static $jobName;
+    public static $queueName;
+    public static $connectionName;
 
     /**
      *
@@ -41,10 +44,11 @@ class WorkerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $start;
-
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
             self::$starts = microtime(true);
+            self::$jobName = $event->job->resolveName();
+            self::$queueName = $event->job->getQueue();
+            self::$connectionName = $event->connectionName;
         });
 
         $this->app['events']->listen([
@@ -53,9 +57,6 @@ class WorkerServiceProvider extends ServiceProvider
             JobExceptionOccurred::class,
             WorkerStopping::class
         ], function ($event) {
-
-            $status = "success";
-            $errorCode = 0;
 
             try {
                 switch(true){
@@ -75,21 +76,24 @@ class WorkerServiceProvider extends ServiceProvider
                         $status = "exception";
                         $errorCode = isset($event->exception) ? $event->exception->getCode() : -1;
                         break;
+                    default:
+                        $status = "unkown_status";
+                        $errorCode = -1;
                 }
 
                 $histogram = app('prometheus.workers.client.histogram');
                 $histogram->observe(
                     microtime(true) - self::$starts,
                     [
-                        $event->job->resolveName(),
-                        $event->job->getQueue(),
-                        $event->connectionName,
+                        self::$jobName,
+                        self::$queueName,
+                        self::$connectionName,
                         $errorCode,
                         $status,
                     ]
                 );
-            } catch (\Throwable $e) {
-                //fail silently
+            } catch(\Throwable $e) {
+                // fail silently and don't stop the application
             }
         });
     }

@@ -14,10 +14,10 @@ use Illuminate\Support\ServiceProvider;
 class WorkerServiceProvider extends ServiceProvider
 {
 
-    public static $starts;
-    public static $jobName;
-    public static $queueName;
-    public static $connectionName;
+    private $starts;
+    private $jobName;
+    private $queueName;
+    private $connectionName;
 
     /**
      *
@@ -45,10 +45,10 @@ class WorkerServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            self::$starts = microtime(true);
-            self::$jobName = $event->job->resolveName();
-            self::$queueName = $event->job->getQueue();
-            self::$connectionName = $event->connectionName;
+            $this->starts = microtime(true);
+            $this->jobName = $event->job->resolveName();
+            $this->queueName = $event->job->getQueue();
+            $this->connectionName = $event->connectionName;
         });
 
         $this->app['events']->listen([
@@ -83,17 +83,19 @@ class WorkerServiceProvider extends ServiceProvider
 
                 $histogram = app('prometheus.workers.client.histogram');
                 $histogram->observe(
-                    microtime(true) - self::$starts,
+                    microtime(true) - $this->starts,
                     [
-                        self::$jobName,
-                        self::$queueName,
-                        self::$connectionName,
+                        $this->jobName,
+                        $this->queueName,
+                        $this->connectionName,
                         $errorCode,
                         $status,
                     ]
                 );
             } catch(\Throwable $e) {
                 // fail silently and don't stop the application
+                $eventName = get_class($event);
+                \Log::error("Failed while processing job event $eventName: ".$e->getMessage());
             }
         });
     }

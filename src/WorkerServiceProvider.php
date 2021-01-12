@@ -14,7 +14,10 @@ use Illuminate\Support\ServiceProvider;
 class WorkerServiceProvider extends ServiceProvider
 {
 
-    public static $starts;
+    private $starts;
+    private $jobName;
+    private $queueName;
+    private $connectionName;
 
     /**
      *
@@ -41,10 +44,11 @@ class WorkerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $start;
-
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            self::$starts = microtime(true);
+            $this->starts = microtime(true);
+            $this->jobName = $event->job->resolveName();
+            $this->queueName = $event->job->getQueue();
+            $this->connectionName = $event->connectionName;
         });
 
         $this->app['events']->listen([
@@ -53,9 +57,6 @@ class WorkerServiceProvider extends ServiceProvider
             JobExceptionOccurred::class,
             WorkerStopping::class
         ], function ($event) {
-
-            $status = "success";
-            $errorCode = 0;
 
             try {
                 switch(true){
@@ -75,21 +76,26 @@ class WorkerServiceProvider extends ServiceProvider
                         $status = "exception";
                         $errorCode = isset($event->exception) ? $event->exception->getCode() : -1;
                         break;
+                    default:
+                        $status = "unkown_status";
+                        $errorCode = -1;
                 }
 
                 $histogram = app('prometheus.workers.client.histogram');
                 $histogram->observe(
-                    microtime(true) - self::$starts,
+                    microtime(true) - $this->starts,
                     [
-                        $event->job->resolveName(),
-                        $event->job->getQueue(),
-                        $event->connectionName,
+                        $this->jobName,
+                        $this->queueName,
+                        $this->connectionName,
                         $errorCode,
                         $status,
                     ]
                 );
-            } catch (\Throwable $e) {
-                //fail silently
+            } catch(\Throwable $e) {
+                // fail silently and don't stop the application
+                $eventName = get_class($event);
+                \Log::error("Failed while processing job event $eventName: ".$e->getMessage());
             }
         });
     }

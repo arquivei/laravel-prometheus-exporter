@@ -65,8 +65,26 @@ class WorkerServiceProvider extends ServiceProvider
                         $errorCode = 0;
                         break;
                     case $event instanceof WorkerStopping:
-                        $status = "timeout";
-                        $errorCode = isset($event->exception) ? $event->exception->getCode() : -1;
+                        // Check https://github.com/illuminate/queue/blob/1cdd2c3bd3a74ef35709b5e2cea75e63c7299fa4/Worker.php#L199
+                        // to see what status is assigned based on why worker is stopping
+                        $errorCode = isset($event->status) ? $event->status : -1;
+                        if ($errorCode == 1) {
+                            // Worker exiting because timeout specified in --timeout has been crossed
+                            // Setting code as -1 for timeout exceeded
+                            $errorCode = -1;
+                            // Setting status as timeout for timeout exceeded
+                            $status = "timeout";
+                        } else if ($errorCode == 12) {
+                            // Worker exiting because memory specified in --memory has been crossed
+                            // Setting code as -2 for memory exceeded
+                            $errorCode = -2;
+                            // Setting status as memory_exceeded for memory exceeded
+                            $status = "memory_exceeded";
+                        } else {
+                            // Worker exiting because of other reasons
+                            $errorCode = isset($event->exception) ? $event->exception->getCode() : -3;
+                            $status = "other";
+                        }
                         break;
                     case $event instanceof JobFailed:
                         $status = "failed";
@@ -77,7 +95,7 @@ class WorkerServiceProvider extends ServiceProvider
                         $errorCode = isset($event->exception) ? $event->exception->getCode() : -1;
                         break;
                     default:
-                        $status = "unkown_status";
+                        $status = "unknown_status";
                         $errorCode = -1;
                 }
 

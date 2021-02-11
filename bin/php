@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e
+
+command -v docker >/dev/null 2>&1 || { echo "docker is required to run this binary. Aborting." >&2; exit 1; }
+
+USER=${USER:-$( id -un )}
+GROUP=${GROUP:-$( id -gn )}
+DOCKER_OPTS=${DOCKER_OPTS:-'-it'}
+PHP_VERSION=${PHP_VERSION:-7.3}
+
+exec docker run ${DOCKER_OPTS} --rm \
+    -u $( id -u ${USER} ):$( id -g ${USER} ) \
+    -v "${PWD}":"/application" \
+    -w "/application" \
+    -e PHP_IDE_CONFIG="serverName=laravel-prometheus-exporter.localhost" \
+    --net=host --sig-proxy=true --pid=host \
+    --entrypoint="php" \
+     laravel-prometheus-exporter:"${PHP_VERSION}" "${@}"
+

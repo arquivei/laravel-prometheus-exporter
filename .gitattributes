@@ -1,1 +1,3 @@
 /examples export-ignore
+/bin export-ignore
+/.docker export-ignore

@@ -21,12 +21,6 @@ class PrometheusServiceProvider extends ServiceProvider
             __DIR__ . '/../config/prometheus.php' => $this->configPath('prometheus.php'),
         ]);
         $this->loadRoutes();
-        /* @var PrometheusExporter $exporter */
-        $exporter = $this->app->make(PrometheusExporter::class);
-        foreach (config('prometheus.collectors') as $class) {
-            $collector = $this->app->make($class);
-            $exporter->registerCollector($collector);
-        }
     }
 
     /**
@@ -38,9 +32,13 @@ class PrometheusServiceProvider extends ServiceProvider
 
         $this->app->singleton(PrometheusExporter::class, function ($app) {
             $adapter = $app['prometheus.storage_adapter'];
-            $prometheus = new CollectorRegistry($adapter);
-
-            return new PrometheusExporter(config('prometheus.namespace'), $prometheus);
+            $prometheus = new CollectorRegistry($adapter, true);
+            $exporter = new PrometheusExporter(config('prometheus.namespace'), $prometheus);
+            foreach (config('prometheus.collectors') as $collectorClass) {
+                $collector = $this->app->make($collectorClass);
+                $exporter->registerCollector($collector);
+            }
+            return $exporter;
         });
         $this->app->alias(PrometheusExporter::class, 'prometheus');
 

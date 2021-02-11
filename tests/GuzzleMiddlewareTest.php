@@ -2,8 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Arquivei\LaravelPrometheusExporter\Tests;
 
+use Arquivei\LaravelPrometheusExporter\GuzzleMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;

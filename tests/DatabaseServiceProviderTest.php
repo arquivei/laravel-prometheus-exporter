@@ -2,8 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace Arquivei\LaravelPrometheusExporter;
+namespace Arquivei\LaravelPrometheusExporter\Tests;
 
+use Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider;
+use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
+use Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider;
+use Arquivei\LaravelPrometheusExporter\Tests\Fixture\MetricSamplesSpec;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 use Prometheus\Histogram;
@@ -14,6 +18,8 @@ use Prometheus\MetricFamilySamples;
  */
 class DatabaseServiceProviderTest extends TestCase
 {
+    private $createdTable = false;
+
     public function testServiceProviderWithDefaultConfig() : void
     {
         $this->createTestTable();
@@ -28,14 +34,14 @@ class DatabaseServiceProviderTest extends TestCase
         /* @var PrometheusExporter $prometheus */
         $prometheus = $this->app->get('prometheus');
         $export = $prometheus->export();
-        $this->assertCount(1, $export);
 
-        /* @var \Prometheus\MetricFamilySamples $samples */
-        $samples = $export[0];
-        $this->assertInstanceOf(MetricFamilySamples::class, $samples);
-        $this->assertSame(['query', 'query_type'], $samples->getLabelNames());
-        $this->assertSame('app_sql_query_duration', $samples->getName());
-        $this->assertSame('SQL query duration histogram', $samples->getHelp());
+        $this->assertContainsSamplesMatching(
+            $export,
+            MetricSamplesSpec::create()
+                ->withName('app_sql_query_duration')
+                ->withLabelNames(['query', 'query_type'])
+                ->withHelp('SQL query duration histogram')
+        );
     }
 
     public function testServiceProviderWithoutCollectingFullSqlQueries()
@@ -46,26 +52,31 @@ class DatabaseServiceProviderTest extends TestCase
         /* @var \Prometheus\Histogram $histogram */
         $histogram = $this->app->get('prometheus.sql.histogram');
         $this->assertInstanceOf(Histogram::class, $histogram);
-        $this->assertSame(['query_type'], $histogram->getLabelNames());
+        $this->assertSame(['query', 'query_type'], $histogram->getLabelNames());
 
         /* @var PrometheusExporter $prometheus */
         $prometheus = $this->app->get('prometheus');
         $export = $prometheus->export();
-        $this->assertCount(1, $export);
-
-        /* @var \Prometheus\MetricFamilySamples $samples */
-        $samples = $export[0];
-        $this->assertInstanceOf(MetricFamilySamples::class, $samples);
-        $this->assertSame(['query_type'], $samples->getLabelNames());
+        $this->assertContainsSamplesMatching(
+            $export,
+            MetricSamplesSpec::create()
+                ->withLabelNames(['query', 'query_type'])
+        );
     }
 
     protected function createTestTable()
     {
+        $this->createdTable = false;
         Schema::connection('test')->create('test', function($table)
         {
             $table->increments('id');
             $table->timestamps();
+            $this->createdTable = true;
         });
+
+        while (!$this->createdTable) {
+            continue;
+        }
     }
 
     protected function getPackageProviders($app) : array
@@ -84,5 +95,11 @@ class DatabaseServiceProviderTest extends TestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+    }
+
+    private function assertContainsSamplesMatching(array $samples, MetricSamplesSpec $spec, int $count = 1): void
+    {
+        $matched = array_filter($samples, [$spec, 'matches']);
+        $this->assertCount($count, $matched);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests;
+namespace Arquivei\LaravelPrometheusExporter\Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

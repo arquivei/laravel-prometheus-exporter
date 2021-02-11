@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests;
+namespace Arquivei\LaravelPrometheusExporter\Tests;
 
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Http\Response;

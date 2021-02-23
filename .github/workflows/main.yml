@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        php: ["7.2", "7.3", "7.4", "8.0"]
+    runs-on: ubuntu-latest
+    container: arquivei/laravel-prometheus-exporter:${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install composer dependencies
+        run: composer install
+
+      - name: Run checks
+        run: php vendor/bin/phpunit
+
+      - name: Run checks in lower versions
+        run: |
+          composer update --prefer-lowest --prefer-dist --prefer-stable --no-interaction
+          php vendor/bin/phpunit

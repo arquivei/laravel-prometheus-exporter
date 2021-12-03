@@ -36,7 +36,7 @@ class PrometheusLaravelRouteMiddleware
                 'route',
                 'status_code',
             ],
-            config('prometheus.guzzle_buckets') ?? null
+            config('prometheus.routes_buckets') ?? null
         );
         /** @var  Histogram $histogram */
         $histogram->observe(

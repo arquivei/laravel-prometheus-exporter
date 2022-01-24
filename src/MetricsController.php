@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Arquivei\LaravelPrometheusExporter;
 
-use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\Controller;
 use Prometheus\RenderTextFormat;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,22 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
 class MetricsController extends Controller
 {
     /**
-     * @var ResponseFactory
-     */
-    protected $responseFactory;
-
-    /**
      * @var PrometheusExporter
      */
     protected $prometheusExporter;
 
     /**
-     * @param ResponseFactory    $responseFactory
      * @param PrometheusExporter $prometheusExporter
      */
-    public function __construct(ResponseFactory $responseFactory, PrometheusExporter $prometheusExporter)
+    public function __construct(PrometheusExporter $prometheusExporter)
     {
-        $this->responseFactory = $responseFactory;
         $this->prometheusExporter = $prometheusExporter;
     }
 
@@ -46,6 +38,6 @@ class MetricsController extends Controller
         $renderer = new RenderTextFormat();
         $result = $renderer->render($metrics);
 
-        return $this->responseFactory->make($result, 200, ['Content-Type' => RenderTextFormat::MIME_TYPE]);
+        return response($result, 200, ['Content-Type' => RenderTextFormat::MIME_TYPE]);
     }
 }

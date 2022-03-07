@@ -8,7 +8,7 @@ USER=${USER:-$( id -un )}
 GROUP=${GROUP:-$( id -gn )}
 COMPOSER_HOME=${COMPOSER_HOME:-${HOME}/.composer}
 DOCKER_OPTS=${DOCKER_OPTS:-'-it'}
-PHP_VERSION=${PHP_VERSION:-7.3}
+PHP_VERSION=${PHP_VERSION:-8.1}
 
 exec docker run ${DOCKER_OPTS} --rm \
     -u $( id -u ${USER} ):$( id -g ${USER} ) \
@@ -19,4 +19,3 @@ exec docker run ${DOCKER_OPTS} --rm \
     --net=host --sig-proxy=true --pid=host \
     --entrypoint="php" \
      laravel-prometheus-exporter:"${PHP_VERSION}" -d "xdebug.mode=off" /usr/bin/composer "${@}"
-

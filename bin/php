@@ -7,7 +7,7 @@ command -v docker >/dev/null 2>&1 || { echo "docker is required to run this bina
 USER=${USER:-$( id -un )}
 GROUP=${GROUP:-$( id -gn )}
 DOCKER_OPTS=${DOCKER_OPTS:-'-it'}
-PHP_VERSION=${PHP_VERSION:-7.3}
+PHP_VERSION=${PHP_VERSION:-8.0}
 
 exec docker run ${DOCKER_OPTS} --rm \
     -u $( id -u ${USER} ):$( id -g ${USER} ) \
@@ -17,4 +17,3 @@ exec docker run ${DOCKER_OPTS} --rm \
     --net=host --sig-proxy=true --pid=host \
     --entrypoint="php" \
      laravel-prometheus-exporter:"${PHP_VERSION}" "${@}"
-

@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     container: arquivei/php:${{ matrix.php }}-cli-debian
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache composer bin
         id: cache-composer-bin
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.local/bin/composer.phar
           key: ${{ runner.os }}-${{ matrix.composer }}-composer-bin
@@ -36,7 +36,7 @@ jobs:
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}

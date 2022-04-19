@@ -12,7 +12,7 @@ jobs:
         php: [ "8.0", "8.1.5" ]
         composer: [ "2.3.5" ]
     runs-on: ubuntu-latest
-    container: arquivei/php:${{ matrix.php }}-cli-debian
+    container: arquivei/php:${{ matrix.php }}-cli
     steps:
       - uses: actions/checkout@v3
 

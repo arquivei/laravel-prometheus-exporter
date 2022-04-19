@@ -44,7 +44,9 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install composer dependencies
-        run: composer install
+        run: |
+          apt install git
+          composer install
 
       - name: Run checks
         run: php vendor/bin/phpunit

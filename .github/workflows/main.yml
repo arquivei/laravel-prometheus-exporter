@@ -45,7 +45,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          apt install git
+          apt update && apt install git
           composer install
 
       - name: Run checks

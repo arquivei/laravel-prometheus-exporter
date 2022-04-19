@@ -12,13 +12,10 @@ jobs:
         php: [ "8.0", "8.1.5" ]
         composer: [ "2.3.5" ]
     runs-on: ubuntu-latest
-    container:
-      image: .docker/Dockerfile
-      env:
-        - PHP_VERSION= ${{ matrix.php }}
     steps:
       - uses: actions/checkout@v3
-
+      - name: Build the Docker image
+        run: docker build -f .docker/Dockerfile -t laravel-prometheus-exporter:${{matrix.php}} --build-arg PHP_VERSION=${{matrix.php}} .
       - name: Cache composer bin
         id: cache-composer-bin
         uses: actions/cache@v3

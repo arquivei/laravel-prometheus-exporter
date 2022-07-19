@@ -83,7 +83,7 @@ class PrometheusServiceProvider extends ServiceProvider
         /** @var Route $route */
         $isLumen = mb_strpos($this->app->version(), 'Lumen') !== false;
         if ($isLumen) {
-            $router->get(
+            $route = $router->get(
                 config('prometheus.metrics_route_path'),
                 [
                     'as' => 'metrics',
@@ -91,10 +91,14 @@ class PrometheusServiceProvider extends ServiceProvider
                 ]
             );
         } else {
-            $router->get(
+            $route = $router->get(
                 config('prometheus.metrics_route_path'),
                 MetricsController::class . '@getMetrics'
             )->name('metrics');
+        }
+
+        if ($middleware = config('prometheus.metrics_route_middleware')) {
+            $route->middleware($middleware);
         }
     }
 

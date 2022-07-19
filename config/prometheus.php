@@ -41,6 +41,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Metrics Route Middleware
+    |--------------------------------------------------------------------------
+    |
+    | The name of a middleware to be used for the metrics route, e.g. a basic-auth check.
+    |
+    | This is only applicable if metrics_route_enabled is set to true.
+    |
+    */
+
+    'metrics_route_middleware' => env('PROMETHEUS_METRICS_ROUTE_MIDDLEWARE', null),
+
+    /*
+    |--------------------------------------------------------------------------
     | Storage Adapter
     |--------------------------------------------------------------------------
     |

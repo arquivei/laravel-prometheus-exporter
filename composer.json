@@ -1,36 +1,36 @@
 {
-  "name": "arquivei/laravel-prometheus-exporter",
-  "description": "A Prometheus exporter for Laravel and Lumen",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Arquivei"
+    "name": "arquivei/laravel-prometheus-exporter",
+    "description": "A Prometheus exporter for Laravel and Lumen",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arquivei"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.4.2",
+        "illuminate/routing": "^10.0",
+        "illuminate/support": "^10.0",
+        "promphp/prometheus_client_php": "^2.6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20",
+        "mockery/mockery": "^1.5.0",
+        "orchestra/testbench": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Arquivei\\LaravelPrometheusExporter\\": "src/",
+            "Arquivei\\LaravelPrometheusExporter\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
     }
-  ],
-  "require": {
-    "php": "^8.0 || ^8.1",
-    "guzzlehttp/guzzle": "^7.4.2",
-    "illuminate/routing": "^9.0",
-    "illuminate/support": "^9.0",
-    "promphp/prometheus_client_php": "^2.6.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.5.20",
-    "mockery/mockery": "^1.5.0",
-    "orchestra/testbench": "^7.5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Arquivei\\LaravelPrometheusExporter\\": "src/",
-      "Arquivei\\LaravelPrometheusExporter\\Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0-dev"
-    }
-  },
-  "config": {
-    "sort-packages": true
-  }
 }

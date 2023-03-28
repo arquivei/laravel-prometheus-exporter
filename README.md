@@ -1,5 +1,12 @@
 # Laravel (and Lumen) Prometheus Exporter
 
+## Version Compatibility
+
+| Releases | PHP    |
+|:---------|:-------|
+| 3.x      | ^8.1;  |
+| 4.x      | ^8.2;  |
+
 A prometheus exporter package for Laravel and Lumen.
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
@@ -23,6 +30,34 @@ library's functionality and the way it's intended to be used.
 
 ## Installation
 
+### Laravel 10
+
+#### Install via composer
+Run the following command:
+```bash
+composer require arquivei/laravel-prometheus-exporter
+```
+
+#### Add service provider
+Add the service provider to the `providers` array in the `config/app.php` config file as follows:
+```bash
+'providers' => [
+
+    ...
+    
+    Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class,
+]
+```
+
+#### Publish the config
+Run the following command:
+```bash
+  php artisan vendor:publish --provider="Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider"
+```
+You should now have a `config/prometheus.php`.
+
+
+###  Laravel 9 or below
 Add the repository to composer.json
 ```composer.json
 "repositories": [

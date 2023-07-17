@@ -32,7 +32,7 @@ class PrometheusServiceProvider extends ServiceProvider
 
         $this->app->singleton(PrometheusExporter::class, function ($app) {
             $adapter = $app['prometheus.storage_adapter'];
-            $prometheus = new CollectorRegistry($adapter, true);
+            $prometheus = new CollectorRegistry($adapter, (bool)config('prometheus.default_metrics_enabled'));
             $exporter = new PrometheusExporter(config('prometheus.namespace'), $prometheus);
             foreach (config('prometheus.collectors') as $collectorClass) {
                 $collector = $this->app->make($collectorClass);

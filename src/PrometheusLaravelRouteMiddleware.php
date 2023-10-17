@@ -25,28 +25,34 @@ class PrometheusLaravelRouteMiddleware
         $start = microtime(true);
         /** @var Response $response */
         $response = $next($request);
-        $duration = microtime(true) - $start;
-        /** @var PrometheusExporter $exporter */
-        $exporter = app('prometheus');
-        $histogram = $exporter->getOrRegisterHistogram(
-            'response_time_seconds',
-            'It observes response time.',
-            [
-                'method',
-                'route',
-                'status_code',
-            ],
-            config('prometheus.guzzle_buckets') ?? null
-        );
-        /** @var  Histogram $histogram */
-        $histogram->observe(
-            $duration,
-            [
-                $request->method(),
-                $matchedRoute->uri(),
-                $response->getStatusCode(),
-            ]
-        );
+
+        try {
+            $duration = microtime(true) - $start;
+            /** @var PrometheusExporter $exporter */
+            $exporter = app('prometheus');
+            $histogram = $exporter->getOrRegisterHistogram(
+                'response_time_seconds',
+                'It observes response time.',
+                [
+                    'method',
+                    'route',
+                    'status_code',
+                ],
+                config('prometheus.guzzle_buckets') ?? null
+            );
+            /** @var  Histogram $histogram */
+            $histogram->observe(
+                $duration,
+                [
+                    $request->method(),
+                    $matchedRoute->uri(),
+                    $response->getStatusCode(),
+                ]
+            );
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return $response;
     }
 

@@ -13,13 +13,6 @@ use Prometheus\Storage\RedisNg;
 
 class StorageAdapterFactory
 {
-    private $hostname;
-
-    public function __construct()
-    {
-        $this->hostname = gethostname() ?? '';
-    }
-
     /**
      * Factory a storage adapter.
      *
@@ -54,8 +47,7 @@ class StorageAdapterFactory
     protected function makeRedisAdapter(array $config) : Redis
     {
         if (isset($config['prefix'])) {
-            $prefix = !empty($config['prefix_dynamic']) ? sprintf('%s_%s_', $config['prefix'], $this->hostname) : $config['prefix'];
-            Redis::setPrefix($prefix);
+            Redis::setPrefix($config['prefix']);
         }
 
         return new Redis($config);

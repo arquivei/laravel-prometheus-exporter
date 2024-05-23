@@ -63,8 +63,7 @@ class StorageAdapterFactory
     protected function makeRedisNgAdapter(array $config) : RedisNg
     {
         if (isset($config['prefix'])) {
-            $prefix = !empty($config['prefix_dynamic']) ? sprintf('%s_%s_', $config['prefix'], $this->hostname) : $config['prefix'];
-            RedisNg::setPrefix($prefix);
+            RedisNg::setPrefix($config['prefix']);
         }
 
         return new RedisNg($config);

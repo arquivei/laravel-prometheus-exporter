@@ -9,6 +9,7 @@ use Prometheus\Storage\Adapter;
 use Prometheus\Storage\APC;
 use Prometheus\Storage\InMemory;
 use Prometheus\Storage\Redis;
+use Prometheus\Storage\RedisNg;
 
 class StorageAdapterFactory
 {
@@ -27,6 +28,8 @@ class StorageAdapterFactory
                 return new InMemory();
             case 'redis':
                 return $this->makeRedisAdapter($config);
+            case 'redis-ng':
+                return $this->makeRedisNgAdapter($config);
             case 'apc':
                 return new APC();
         }
@@ -48,5 +51,21 @@ class StorageAdapterFactory
         }
 
         return new Redis($config);
+    }
+
+    /**
+     * Factory a redis-ng storage adapter.
+     *
+     * @param array $config
+     *
+     * @return RedisNg
+     */
+    protected function makeRedisNgAdapter(array $config) : RedisNg
+    {
+        if (isset($config['prefix'])) {
+            RedisNg::setPrefix($config['prefix']);
+        }
+
+        return new RedisNg($config);
     }
 }

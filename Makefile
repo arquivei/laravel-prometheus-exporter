@@ -1,10 +1,10 @@
-PHP_VERSION ?= 8.2
+PHP_VERSION ?= 8.3
 PHP ?= bin/php -d "xdebug.mode=off"
 COMPOSER ?= bin/composer
 
 .PHONY: setup
 setup:
-	DOCKER_BUILDKIT=1 docker build -f .docker/Dockerfile -t laravel-prometheus-exporter:8.2 --build-arg PHP_VERSION=8.2 .
+	DOCKER_BUILDKIT=1 docker build -f .docker/Dockerfile -t laravel-prometheus-exporter:8.2 --build-arg PHP_VERSION=8.3 .
 
 .PHONY: vendor
 vendor:

@@ -6,3 +6,4 @@ coverage.xml
 .php_cs.cache
 examples/lumen-app/vendor
 .phpunit.cache
+.phpunit.result.cache

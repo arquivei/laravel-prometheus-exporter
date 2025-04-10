@@ -99,7 +99,7 @@ return [
     'collectors' => [
         // \Your\ExporterClass::class,
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Buckets config
@@ -110,8 +110,15 @@ return [
     | Default value is null.
     |
     */
-    
+
     'routes_buckets' => null,
     'sql_buckets' => null,
     'guzzle_buckets' => null,
+
+
+    'standard_metrics' => [
+        'owner' => env('PROMETHEUS_STANDARD_METRICS_OWNER'),
+        'domain' => env('PROMETHEUS_STANDARD_METRICS_DOMAIN'),
+        'system' => env('PROMETHEUS_STANDARD_METRICS_SYSTEM')
+    ],
 ];

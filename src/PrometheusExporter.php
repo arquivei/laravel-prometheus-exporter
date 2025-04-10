@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Arquivei\LaravelPrometheusExporter;
 
@@ -29,9 +29,9 @@ class PrometheusExporter
     protected $collectors = [];
 
     /**
-     * @param string            $namespace
+     * @param string $namespace
      * @param CollectorRegistry $prometheus
-     * @param array             $collectors
+     * @param array $collectors
      */
     public function __construct(string $namespace, CollectorRegistry $prometheus, array $collectors = [])
     {
@@ -49,7 +49,7 @@ class PrometheusExporter
      *
      * @return string
      */
-    public function getNamespace() : string
+    public function getNamespace(): string
     {
         return $this->namespace;
     }
@@ -59,7 +59,7 @@ class PrometheusExporter
      *
      * @return CollectorRegistry
      */
-    public function getPrometheus() : CollectorRegistry
+    public function getPrometheus(): CollectorRegistry
     {
         return $this->prometheus;
     }
@@ -69,7 +69,7 @@ class PrometheusExporter
      *
      * @param CollectorInterface $collector
      */
-    public function registerCollector(CollectorInterface $collector) : void
+    public function registerCollector(CollectorInterface $collector): void
     {
         $name = $collector->getName();
 
@@ -85,7 +85,7 @@ class PrometheusExporter
      *
      * @return array
      */
-    public function getCollectors() : array
+    public function getCollectors(): array
     {
         return $this->collectors;
     }
@@ -97,7 +97,7 @@ class PrometheusExporter
      *
      * @return CollectorInterface
      */
-    public function getCollector($name) : CollectorInterface
+    public function getCollector($name): CollectorInterface
     {
         if (!isset($this->collectors[$name])) {
             throw new InvalidArgumentException(sprintf('The collector "%s" is not registered.', $name));
@@ -111,13 +111,13 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array  $labels
+     * @param array $labels
      *
      * @return Counter
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#counter
      */
-    public function registerCounter($name, $help, $labels = []) : Counter
+    public function registerCounter($name, $help, $labels = []): Counter
     {
         return $this->prometheus->registerCounter($this->namespace, $name, $help, $labels);
     }
@@ -129,7 +129,7 @@ class PrometheusExporter
      *
      * @return Counter
      */
-    public function getCounter($name) : Counter
+    public function getCounter($name): Counter
     {
         return $this->prometheus->getCounter($this->namespace, $name);
     }
@@ -139,13 +139,13 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array  $labels
+     * @param array $labels
      *
      * @return Counter
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#counter
      */
-    public function getOrRegisterCounter($name, $help, $labels = []) : Counter
+    public function getOrRegisterCounter($name, $help, $labels = []): Counter
     {
         return $this->prometheus->getOrRegisterCounter($this->namespace, $name, $help, $labels);
     }
@@ -155,13 +155,13 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array  $labels
+     * @param array $labels
      *
      * @return Gauge
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#gauge
      */
-    public function registerGauge($name, $help, $labels = []) : Gauge
+    public function registerGauge($name, $help, $labels = []): Gauge
     {
         return $this->prometheus->registerGauge($this->namespace, $name, $help, $labels);
     }
@@ -173,7 +173,7 @@ class PrometheusExporter
      *
      * @return Gauge
      */
-    public function getGauge($name) : Gauge
+    public function getGauge($name): Gauge
     {
         return $this->prometheus->getGauge($this->namespace, $name);
     }
@@ -183,13 +183,13 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array  $labels
+     * @param array $labels
      *
      * @return Gauge
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#gauge
      */
-    public function getOrRegisterGauge($name, $help, $labels = []) : Gauge
+    public function getOrRegisterGauge($name, $help, $labels = []): Gauge
     {
         return $this->prometheus->getOrRegisterGauge($this->namespace, $name, $help, $labels);
     }
@@ -199,14 +199,14 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array  $labels
-     * @param array  $buckets
+     * @param array $labels
+     * @param array $buckets
      *
      * @return Histogram
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#histogram
      */
-    public function registerHistogram($name, $help, $labels = [], $buckets = null) : Histogram
+    public function registerHistogram($name, $help, $labels = [], $buckets = null): Histogram
     {
         return $this->prometheus->registerHistogram($this->namespace, $name, $help, $labels, $buckets);
     }
@@ -218,7 +218,7 @@ class PrometheusExporter
      *
      * @return Histogram
      */
-    public function getHistogram($name) : Histogram
+    public function getHistogram($name): Histogram
     {
         return $this->prometheus->getHistogram($this->namespace, $name);
     }
@@ -228,14 +228,14 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array  $labels
-     * @param array  $buckets
+     * @param array $labels
+     * @param array $buckets
      *
      * @return Histogram
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#histogram
      */
-    public function getOrRegisterHistogram($name, $help, $labels = [], $buckets = null) : Histogram
+    public function getOrRegisterHistogram($name, $help, $labels = [], $buckets = null): Histogram
     {
         return $this->prometheus->getOrRegisterHistogram($this->namespace, $name, $help, $labels, $buckets);
     }
@@ -245,7 +245,7 @@ class PrometheusExporter
      *
      * @return MetricFamilySamples[]
      */
-    public function export() : array
+    public function export(): array
     {
         foreach ($this->collectors as $collector) {
             /* @var CollectorInterface $collector */
@@ -253,5 +253,34 @@ class PrometheusExporter
         }
 
         return $this->prometheus->getMetricFamilySamples();
+    }
+
+    /**
+     * @param string $name
+     * @param string $help
+     * @param array $labels
+     *
+     * @return Counter
+     */
+    public function getOrRegisterNamelessCounter(string $name, string $help, array $labels = []): Counter
+    {
+        return $this->prometheus->getOrRegisterCounter("", $name, $help, $labels);
+    }
+
+    /**
+     * @param string $name
+     * @param string $help
+     * @param array $labels
+     * @param array|null $buckets
+     *
+     * @return Histogram
+     */
+    public function getOrRegisterNamelessHistogram(
+        string $name,
+        string $help,
+        array $labels = [],
+        array $buckets = null
+    ): Histogram {
+        return $this->prometheus->getOrRegisterHistogram("", $name, $help, $labels, $buckets);
     }
 }

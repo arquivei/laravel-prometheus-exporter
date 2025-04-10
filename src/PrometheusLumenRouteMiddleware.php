@@ -2,13 +2,10 @@
 
 namespace Arquivei\LaravelPrometheusExporter;
 
-use Closure;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Support\Facades\Route as RouteFacade;
-use Prometheus\Histogram;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class PrometheusLumenRouteMiddleware extends PrometheusLaravelRouteMiddleware
 {

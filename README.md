@@ -139,6 +139,65 @@ The labels exported are
 
 Note: you can disable logging the full query by turning off the configuration of `PROMETHEUS_COLLECT_FULL_SQL_QUERY`.
 
+### Standard metrics
+
+When using the Arquivei\LaravelPrometheusExporter\PrometheusLaravelRouteMiddleware
+middleware, there are two metrics that get exported automatically:
+
+- execution_count: number of executions
+- execution_latency_seconds: latency of executions in seconds
+
+The execution_count metric is a counter.
+
+The execution_latency_seconds metric is a histogram with the following values as buckets:
+
+- 0,
+- 0.005,
+- 0.01,
+- 0.025,
+- 0.05,
+- 0.075,
+- 0.1,
+- 0.25,
+- 0.5,
+- 0.75,
+- 1,
+- 1.5,
+- 2,
+- 2.5,
+- 5,
+- 7.5,
+- 10,
+- 20,
+- 30,
+- 40,
+- 50,
+- 60
+
+Both metrics have the following labels:
+
+- owner: person or team responsible for the system
+- domain: domain of the system
+- system: system's name
+- component: name of the controller that handled the request
+- operation: method inside the controller that handled the request (action)
+- error: error message, if any, NONE otherwise
+- error_class: HTTP status text, if any errors, NONE otherwise
+
+Labels not set will be exported as an empty string.
+
+Owner, domain, and system can be set by the following environment variables:
+
+- PROMETHEUS_STANDARD_METRICS_OWNER for owner
+- PROMETHEUS_STANDARD_METRICS_DOMAIN for domain
+- PROMETHEUS_STANDARD_METRICS_SYSTEM for system
+
+Or using the config/prometheus.php file:
+
+- standard_metrics.owner for owner
+- standard_metrics.domain for domain
+- standard_metrics.system for system
+
 ### Storage Adapters
 
 The storage adapter is used to persist metrics across requests.  The `memory` adapter is enabled by default, meaning
